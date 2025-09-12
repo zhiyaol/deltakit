@@ -24,7 +24,7 @@ from deltakit_explorer.codes.css._css_code import CSSCode
 from deltakit_explorer.codes.stabiliser import Stabiliser
 from deltakit_explorer.enums.basic_enums import DrawingColours
 
-def draw_patch(self, filename: Optional[str] = None, unrotated_code: bool = False) -> go.FigureWidget:
+def draw_patch(self, dataQubitClickCallback = lambda _: None, ancillaQubitClickCallback = lambda _: None, filename: Optional[str] = None, unrotated_code: bool = False) -> go.FigureWidget:
     """
     Draw an interactive picture of the planar code using Plotly FigureWidget.
     Clicking on qubits will highlight them.
@@ -196,20 +196,26 @@ def draw_patch(self, filename: Optional[str] = None, unrotated_code: bool = Fals
     data_scatter.marker.color = data_colors
     data_scatter.marker.size = data_sizes
     
+    pauli_colors = ['red', 'green', 'blue']
+    
     # Create callback function for data qubits
     def update_data_point(trace, points, selector):
         c = list(data_scatter.marker.color)
         s = list(data_scatter.marker.size)
         for i in points.point_inds:
-            if c[i] == '#bae2be':  # If already highlighted, revert
+            if c[i] == pauli_colors[-1]: # If on last Pauli color, unhighlight point
                 c[i] = DrawingColours.DATA_QUBIT_COLOUR.value
                 s[i] = 20
-            else:  # If not highlighted, highlight it
-                c[i] = '#bae2be'
+            else:  
+                if c[i] in pauli_colors: # If a Pauli color, change to next
+                    c[i] = pauli_colors[pauli_colors.index(c[i]) + 1]
+                else: # If not a Pauli color, change to first Pauli color
+                    c[i] = pauli_colors[0]
                 s[i] = 30
         with f.batch_update():
             data_scatter.marker.color = c
             data_scatter.marker.size = s
+        dataQubitClickCallback(points)
     
     data_scatter.on_click(update_data_point)
     
@@ -225,15 +231,19 @@ def draw_patch(self, filename: Optional[str] = None, unrotated_code: bool = Fals
             c = list(x_ancilla_scatter.marker.color)
             s = list(x_ancilla_scatter.marker.size)
             for i in points.point_inds:
-                if c[i] == '#bae2be':  # If already highlighted, revert
+                if c[i] == pauli_colors[-1]: # If on last Pauli color, unhighlight point
                     c[i] = DrawingColours.ANCILLA_QUBIT_COLOUR.value
                     s[i] = 20
-                else:  # If not highlighted, highlight it
-                    c[i] = '#bae2be'
+                else:
+                    if c[i] in pauli_colors: # If a Pauli color, change to next
+                        c[i] = pauli_colors[pauli_colors.index(c[i]) + 1]
+                    else: # If not a Pauli color, change to first Pauli color
+                        c[i] = pauli_colors[0]
                     s[i] = 30
             with f.batch_update():
                 x_ancilla_scatter.marker.color = c
                 x_ancilla_scatter.marker.size = s
+            ancillaQubitClickCallback(points)
         
         x_ancilla_scatter.on_click(update_x_ancilla_point)
     
@@ -249,21 +259,31 @@ def draw_patch(self, filename: Optional[str] = None, unrotated_code: bool = Fals
             c = list(z_ancilla_scatter.marker.color)
             s = list(z_ancilla_scatter.marker.size)
             for i in points.point_inds:
-                if c[i] == '#bae2be':  # If already highlighted, revert
+                if c[i] == pauli_colors[-1]: # If on last Pauli color, unhighlight point
                     c[i] = DrawingColours.ANCILLA_QUBIT_COLOUR.value
                     s[i] = 20
-                else:  # If not highlighted, highlight it
-                    c[i] = '#bae2be'
+                else:
+                    if c[i] in pauli_colors: # If a Pauli color, change to next
+                        c[i] = pauli_colors[pauli_colors.index(c[i]) + 1]
+                    else: # If not a Pauli color, change to first Pauli color
+                        c[i] = pauli_colors[0]
                     s[i] = 30
             with f.batch_update():
                 z_ancilla_scatter.marker.color = c
                 z_ancilla_scatter.marker.size = s
+            ancillaQubitClickCallback(points)
         
         z_ancilla_scatter.on_click(update_z_ancilla_point)
     
     # Update layout
     f.layout.update(
-        title='Interactive Planar Code Visualization<br><sub>Click on qubits to highlight them</sub>',
+        title={
+            'text': 'Interactive Planar Code Visualization<br><sub>Click on qubits to highlight them</sub>',
+            # 'x': 0.5,  # Center the title
+            # 'xanchor': 'center',
+            # 'yanchor': 'top',
+            'font': dict(size=20)
+        },
         xaxis=dict(
             range=x_lim,
             showgrid=True,
@@ -280,7 +300,7 @@ def draw_patch(self, filename: Optional[str] = None, unrotated_code: bool = Fals
         ),
         plot_bgcolor='white',
         paper_bgcolor='white',
-        showlegend=True,
+        showlegend=False,
         legend=dict(
             x=1.02,
             y=1,

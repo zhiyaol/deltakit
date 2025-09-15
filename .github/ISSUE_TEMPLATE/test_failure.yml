@@ -1,0 +1,51 @@
+name: Test failure report
+description: Create a test failure report
+title: "tests: <your description here>"
+labels: ["tests"]
+assignees: []
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ### 🧪 Test Failure Report
+
+        Thanks for helping improve the project! Please fill out the form below.
+
+  - type: textarea
+    id: failure-summary
+    attributes:
+      label: Test Failure Summary
+      description: |
+        ```
+        Please copy-paste the failure summary produced by `pytest`.
+        ```
+    validations:
+      required: true
+
+  - type: textarea
+    id: failure-traceback
+    attributes:
+      label: Test Failure Details
+      description:  |
+        <details>
+
+        ```
+        Please copy-paste the failure details produced by `pytest`.
+        ```
+
+        </details>
+    validations:
+      required: true
+
+  - type: textarea
+    id: related-prs
+    attributes:
+      label: Relevant issues/PRs
+      description: Please link to relevant issues/PRs, indicating their connection (e.g. "See CI failure here.")
+
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: Additional context
+      description: Please add any other context about the problem here, such as debugging suggestions or platform information.

@@ -1,0 +1,40 @@
+name: Request
+description: Suggest an idea for this project
+title: "request: <your description here>"
+labels: ["request"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ### ✨ Feature Request
+
+        Please fill out the following sections to help us understand your idea better.
+
+  - type: textarea
+    id: motivation
+    attributes:
+      label: Motivation
+      description: A description of the problem you're trying to solve.
+      placeholder: Ex. I'm always frustrated when [...]
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposed-solution
+    attributes:
+      label: Proposed solution
+      description: A description of what you want to happen.
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Potential alternatives
+      description: Any alternative solutions or features you've considered.
+
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: Additional context
+      description: Add any other context about the feature request here.

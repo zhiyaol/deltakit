@@ -1,0 +1,19 @@
+deltakit-explorer:
+  - changed-files:
+      - any-glob-to-any-file: deltakit-explorer/**
+
+deltakit-circuit:
+  - changed-files:
+      - any-glob-to-any-file: deltakit-circuit/**
+
+deltakit-core:
+  - changed-files:
+      - any-glob-to-any-file: deltakit-core/**
+
+deltakit-decode:
+  - changed-files:
+      - any-glob-to-any-file: deltakit-decode/**
+
+documentation:
+  - changed-files:
+      - any-glob-to-any-file: docs/**

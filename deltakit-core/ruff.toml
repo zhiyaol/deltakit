@@ -1,0 +1,19 @@
+# Linting configuration for deltakit_explorer.
+#
+# General and format configurations are repository-wide for the moment.
+extend = "../ruff.toml"
+include = ["src/deltakit_core/**/*.py", "tests/**/*.py"]
+
+# Specific per-file ignores
+[lint.per-file-ignores]
+"tests/**/*.py" = [
+    # Magic constants in tests are not an urgent issue.
+    "PLR2004",
+    # Some tests have long lines. That is mostly due to long and descriptive test names
+    # which is a desirable feature. Removing that check for the tests only. 
+    "E501",
+    # Some test names/arguments are not strictly using camel_case as they contain some
+    # capitalised letters. This is not an issue as most of the time this casing helps
+    # with the readability.
+    "N802", "N803"
+]

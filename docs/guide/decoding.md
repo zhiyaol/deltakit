@@ -101,7 +101,7 @@ deltakit_measurements.to_detectors_and_observables(
 
 ## Decoding from detectors
 
-The most common way to decode your simulation results is to provide detectors to a decoder.
+The most common way to decode your simulation results is to provide detector events to a decoder.
 Please be attentive to the data you pass to decoders.
 Check if the circuit has noise, and that the noise is relevant to the data.
 

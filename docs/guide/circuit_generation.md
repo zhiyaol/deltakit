@@ -72,9 +72,9 @@ text_qasm_circuit = stim_circuit.to_qasm(open_qasm_version=3, skip_dets_and_obs=
 stim_circuit.diagram("timeline-svg-html")
 ```
 
-The repetition code beyond is not yet runnable on the real QPU hardware.
+The repetition code above is not yet runnable on the real QPU hardware.
 It has a mixture of reset and measurement gates in different bases,
-its 2-qubit gate is chosen deliberately, and its qubits do not order in a chain.
+its 2-qubit gate is chosen arbitrarily, and its qubits do not order in a chain.
 
 To address these issues, use the ({class}`QPU class <deltakit.explorer.qpu.QPU>`).
 This class encapsulates qubit grid, native gates, and gate noise model.
@@ -109,7 +109,7 @@ stim_circuit = deltakit_compiled_circuit.as_stim_circuit(mapping)
 stim_circuit.diagram("timeline-svg-html")
 ```
 
-Ion trap devices are often using [Mølmer–Sørensen gate](https://en.wikipedia.org/wiki/M%C3%B8lmer%E2%80%93S%C3%B8rensen_gate), which in Stim is represented as `SQRT_XX`.
+In a more realistic example, ion trap devices are often using [Mølmer–Sørensen gate](https://en.wikipedia.org/wiki/M%C3%B8lmer%E2%80%93S%C3%B8rensen_gate), which in Stim is represented as `SQRT_XX`. You can use a ({class}`QPU class <deltakit.explorer.qpu.QPU>`) to compile down your circuit to use that gate.
 
 ```{code-cell} ipython3
 ions_qpu_instance = QPU(
@@ -170,7 +170,7 @@ stim_circuit.diagram("timeline-svg-html")
 ```
 
 Some experiments explore `ISWAP` gates as the entangling gate.
-`ISWAP` circuits are generated differently, so you have to define your desire to use these gates on the level of code construction.
+`ISWAP` circuits are generated differently, so you have to express your desire to use these gates directly at code construction (and not when compiling).
 
 Native `ISWAP` circuit generation is accessible using Deltakit cloud API.
 
@@ -223,7 +223,6 @@ You will need an API client object to generate a stability experiments.
 
 ```{code-cell} ipython3
 from deltakit_explorer.codes import css_code_stability_circuit
-
 
 deltakit_stability = css_code_stability_circuit(
     css_code=RotatedPlanarCode(width=3, height=5),  # rectangular patch

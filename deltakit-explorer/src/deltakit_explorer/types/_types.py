@@ -942,7 +942,7 @@ class DecodingResult:
         """
         Return standard deviation of result
         for a given number of shots and decoder fails."""
-        if self.shots <= 0.0:
+        if self.shots <= 0:
             return float("inf")
         hits = self.shots - self.fails
         return (self.fails * hits / self.shots ** 3) ** .5

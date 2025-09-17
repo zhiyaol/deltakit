@@ -917,8 +917,7 @@ class DecodingResult:
         if counts is None:
             counts = [shots]
         self.times = times
-        # if empty, update with total count of shots
-        self.counts = counts or [shots]
+        self.counts = counts
         self.predictions_format = predictions_format
         self.predictions_file = predictionsFile
         if self.predictions_file is not None:

@@ -80,8 +80,8 @@ print(f"Bell state correlation = {corr:.4f}")
 You may use Deltakit to generate a full-scale QEC experiment circuit and simulate it.
 
 ```{code-cell} ipython3
-from deltakit_explorer.codes.css._css_code_experiment_circuit import css_code_memory_circuit
-from deltakit_explorer.codes.planar_code import RotatedPlanarCode
+from deltakit_explorer.codes import css_code_memory_circuit
+from deltakit_explorer.codes import RotatedPlanarCode
 from deltakit_circuit.gates import PauliBasis
 
 rplanar = RotatedPlanarCode(width=3, height=3)

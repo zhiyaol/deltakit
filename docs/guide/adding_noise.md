@@ -40,16 +40,18 @@ and so on.
 
 Each noise source has its own theory, and you may try to model it quite accurately.
 The problem comes with the experiment size.
-As you explore probabilistic processes, you want your evidence to be statistically reliable. But due to the exponential improvement in logical error-probability when scaling an error-correction code, typical experiment repetition numbers (also known as number of shots) may exceed $10^8$.
+As you explore probabilistic processes, you want your evidence to be statistically reliable.
+But due to the exponential improvement in logical error-probability when scaling an error-correction code,
+typical experiment repetition numbers (also known as number of shots) may exceed $10^8$.
 Doing accurate simulation with this number of repetitions is practically impossible,
 so you may have to sacrifice model accuracy for simulation speed.
 
 ## Practical solution
 
-The ``Stim`` library offers tools for both quick simulation (thanks to its limitation to Clifford gates)
+The `Stim` library offers tools for both quick simulation (thanks to its limitation to Clifford gates)
 and a reasonably rich palette of error mechanisms,
 which may be used to approximate different types of noise.
-Deltakit benefits from both Stim's simulation and error approaches.
+Deltakit benefits from both Stim's simulation and error implementation approaches.
 You may read about these building blocks in detail in the
 [Noise Channels section](https://github.com/quantumlib/Stim/blob/main/doc/gates.md#noise-channels)
 of the Stim documentation.
@@ -59,8 +61,8 @@ A noise model is a way to define realistic errors across all qubits and gates
 using a small number of controllable parameters.
 
 ## `NoiseParameters` class
-The {class}`NoiseParameters <deltakit.explorer.qpu.NoiseParameters>` class is a base class
-that allows you to define arbitrary functions which insert
+The {class}`NoiseParameters <deltakit.explorer.qpu.NoiseParameters>` base class
+allows you to define arbitrary functions which insert
 noise events into the circuit when the necessary conditions are met.
 You may define your realistic noise model by specifying what should happen
 each time a gate or measurement is executed, or when a qubit remains idle.
@@ -130,11 +132,11 @@ All these parameters are characteristics of the QPU and can be derived during de
 You can often find these numbers in the datasheets of hardware companies.
 
 The {class}`PhysicalNoise <deltakit.explorer.qpu.PhysicalNoise>` class is parameterized with the following values:
-- `t_1`: $T_1$ time (relaxation from $|1\rangle$ to $|0\rangle$), in seconds.
+- `t_1`: $T_1$ time (relaxation from $\vert 1\rangle$ to $\vert 0\rangle$), in seconds.
 - `t_2`: $T_2$ time (dephasing), in seconds.
 - `p_1_qubit_gate_error`: Probability of a flip during a 1-qubit gate.
 - `p_2_qubit_gate_error`: Probability of a flip during a 2-qubit gate.
-- `p_reset_error`: Probability of a flip during a reset.
+- `p_reset_error`: Probability of a flip during reset.
 - `p_meas_qubit_error`: Probability of incorrect measurement.
 - `p_readout_flip`: Probability of a flip during qubit measurement.
 
@@ -187,7 +189,7 @@ This noise model assumes that after every measurement there is a reset.
 This model also includes an optional parameter `pL` for leakage, implemented as described
 in [Local Clustering Decoder: a fast and adaptive hardware decoder for the surface code, Ziad et al.](https://arxiv.org/abs/2411.10343).
 
-Note that to apply `SI1000Noise` **with leakage** requires making a call to the cloud API.
+Note that to apply `SI1000Noise` **with leakage**, Deltakit makes a call to the cloud API.
 
 ```{code-cell} ipython3
 from deltakit.explorer.qpu import SI1000Noise, SD6Noise

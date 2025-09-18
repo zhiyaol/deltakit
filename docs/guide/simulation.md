@@ -16,9 +16,15 @@ kernelspec:
 
 ## 1. Simulation of Measurements
 
-Decoding a quantum error correction experiment requires measurement data. This can either be data simulated on a classical computer or data obtained from a QPU. If you have already run a quantum error correction experiment, either on hardware or in simulation, you may have measurement results in one of the formats. Otherwise, you can use Deltakit and Stim to generate simulated measurement data, as described on this page.
+Decoding a quantum error correction experiment requires measurement data.
+This can either be data simulated on a classical computer or data obtained from a QPU. 
+If you have already run a quantum error correction experiment,
+you may have measurement results in one of the formats.
+Otherwise, you can use Deltakit and Stim to generate simulated measurement data, as described on this page.
 
-You should prepare a quantum circuit that you want to simulate. You can generate one by following the instructions of this documentation. Or you may write circuits following the Stim circuit format.
+You should prepare a quantum circuit that you want to simulate.
+You can generate one by following the instructions of this documentation.
+Or you may write circuits following the Stim circuit format.
 
 ### 1.1. Stim Circuit Simulation
 
@@ -160,7 +166,7 @@ measurements, leakage = simulation.simulate_with_stim(leaky_circuit, 100_000, cl
 
 If you perform your experiments on hardware, or in other simulator (like qiskit), you will end up with a measurements file.
 For example, a CSV or a 01 file with qubit measurements, one experiment per line.
-Some of them will preserve the same order or measurements, some (like qiskit) may reverse or reorder them.
+Some of them will preserve the same order of measurements, some (like qiskit) may reverse or reorder them.
 Before moving this data to Deltakit, please make sure the data is given **in the order of measurement**.
 
 Decoders, however, need syndromes to predict.

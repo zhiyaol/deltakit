@@ -23,7 +23,7 @@ We already know that future compilation approaches will consist of such building
 logical gates, patches, and magic state factories.
 Contemporary research combines them into
 experiments.
-These experiments show that these blocks are compatible and behave as theory
+QEC experiments show that these blocks are compatible and behave as theory
 predicts.
 
 They are also a powerful benchmark for hardware providers.
@@ -39,18 +39,19 @@ Quantum Memory Experiment (QMEM) is a core benchmark for both QPU hardware and d
 Logical Error Probability (LEP) value, derived from the experiment, is influenced by both
 the quality of qubits and the capability of the decoder.
 
-Deltakit allows to generate experiment circuits, compatible with different planar architecture.
+Deltakit allows to generate experiment circuits, compatible with different QPU architectures,
+both planar and with long range connections.
 
 ### 1.1. Repetition code: minimal viable experiment
 
 The code below generates the circuit for a 5-qubit repetition code, representing a single logical qubit.
 5-qubit code is defined as distance-3 code: this is the number of error-corrected data qubits in this code.
 We will generate 3 rounds of error correction, which means that detectors (auxiliary or ancillary qubits)
-will be reset, entangled with data qubits, and then measured 3 times.
+will be reset, entangled with data qubits, and measured. This will repeat 3 times.
 In the end of the experiment, all data qubits will be measured as well. One of them will be used as
 a representative of the logical qubit state.
 In this experiment we assume, that data qubits are initialised as $\vert 000\rangle$ and should remain in the same state.
-If one of them (chosen as an observable) due to noise in the system flips its value to $|1\rangle$, then
+If one of them (chosen as an observable) due to noise in the system flips its value to $\vert 1\rangle$, then
 a good decoder should be able to predict this event.
 
 ```{code-cell} ipython3

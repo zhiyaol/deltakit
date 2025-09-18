@@ -64,10 +64,10 @@ print("Observables :", observables.as_numpy().shape)
 ```
 
 The sweep file is an optional additional file containing sweep bits.
-These are used to inform the code as to what states the qubits were
+These are typically used to inform the code as to what states the qubits were
 in at the start of each run of the circuit.
 If not specified, it is assumed that all qubits were initialised
-in the ``|0⟩`` state.
+in the $\vert 0\rangle$ state.
 
 ```{code-cell} ipython3
 import numpy as np
@@ -128,7 +128,6 @@ DecodingResult(shots=predictions.shape[0], fails=fails)
 ### Decoding via the cloud
 
 A broader selection of decoders is accessible via the cloud:
-
 
 * [Minimum-Weight Perfect Matching](https://arxiv.org/abs/2303.15933), using {class}`MWPMDecoder <deltakit.decode.MWPMDecoder>`;
 * [Collision Clustering](https://arxiv.org/abs/2309.05558), using {class}`CCDecoder <deltakit.decode.CCDecoder>`;
@@ -215,10 +214,10 @@ The LCD contains two main components to achieve this balance between speed and a
 2. An adaptivity engine that helps deal with leakage.
 
 Leakage is a source of noise where qubits no longer occupy the $\vert 0\rangle$ and $\vert 1\rangle$ computational basis states, and instead 
-drift into higher energy 'leakage' states, specified as $\vert 2\rangle$, $\vert 3\rangle$, $\vert 4\rangle$, etc. Leakage noise is long-lived and may 
+drift into higher energy 'leaked' states, specified as $\vert 2\rangle$, $\vert 3\rangle$, $\vert 4\rangle$, etc. Leakage noise is long-living and may 
 spread to other qubits through multi-qubit gates.
 
-`parameters` is an optional dictionary, which may contain parameters
+`parameters` is an optional dictionary, which may contain flags and values
 specific to each decoder. For more details on which parameters are available for each decoder, see the subsection below.
 
 +++
@@ -311,7 +310,7 @@ An example of leakage-aware decoding is provided in the
 While exploring decoding capabilities, you may be interested in the cases when decoding
 predictions fail.
 
-For example, for a quantum memory experiment which starts from the ``|0⟩`` state,
+For example, for a quantum memory experiment which starts from the $\vert 0\rangle$ state,
 a decoder failure is a mismatch between the prediction and the observable.
 By analysing detector combinations (also known as syndromes) which led to failures,
 you may derive important information about decoder behaviour and device properties.

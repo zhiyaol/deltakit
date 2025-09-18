@@ -20,3 +20,4 @@ let's take a look at some realistic examples.
    notebooks/simulation/server_simulation
    notebooks/simulation/leakage-aware_decoding
    notebooks/simulation/leakage_demo
+   notebooks/visualization/surface_code_demo

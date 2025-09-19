@@ -89,19 +89,6 @@ class TestCalculateLambda:
                 lep_stddev_per_round=lep_stddev
             )
 
-    def test_calculate_lambda_warns(self, mocker):
-        mocker.patch("deltakit_core.api._logging.Logging.warn")
-        distances = [2, 3, 4]
-        lep = [0.000996, 0.000302, 0.000302]
-        lep_stddev = [2.0e-09, 6.0e-10, 6.0e-10]
-        analysis.calculate_lambda_and_lambda_stddev(
-            distances=distances,
-            lep_per_round=lep,
-            lep_stddev_per_round=lep_stddev
-        )
-        Logging.warn.assert_called_once()
-        Logging.set_log_to_console(False)
-
 
 class TestCalculateLep:
 

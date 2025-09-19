@@ -3,10 +3,10 @@
 """
 from __future__ import annotations
 from collections.abc import Sequence
+import warnings
 
 import numpy as np
 import numpy.typing as npt
-from deltakit_core.api._logging import Logging
 
 
 def get_exp_fit(
@@ -57,61 +57,56 @@ def get_exp_fit(
             )
 
     """
-    query_id = Logging.info_and_generate_uid(locals())
-    try:
-        # Calculate logical fidelity (F = 1 - 2 * p_err) and its standard error
-        logical_perr_per_round = np.array(logical_fails_all_rounds) / np.array(
-            shots_all_rounds
+    # Calculate logical fidelity (F = 1 - 2 * p_err) and its standard error
+    logical_perr_per_round = np.array(logical_fails_all_rounds) / np.array(
+        shots_all_rounds
+    )
+    fidelity = 1 - 2 * logical_perr_per_round
+    assert not np.any(
+        fidelity < 0.0
+    ), f"Fidelity values (1-2*p) should be non-negative, but were {fidelity}."
+
+    yerr = np.sqrt(
+        logical_perr_per_round * (1 - logical_perr_per_round) / shots_all_rounds
+    )
+
+    # Take base-10 log of fidelity and find
+    # the best linear fit
+    sigma = np.abs(yerr / fidelity)[1:]
+    # Where `sigma = 0`, a weight will be infinite. This will cause
+    # a warning and error in `polyfit`. The error is enough, so let's
+    # suppress the warnings. If the error is considered confusing, we
+    # can catch and re-raise with more information.
+    with np.errstate(divide="ignore"):
+        w = 1 / sigma
+    x = np.array(all_rounds[1:])
+    y = np.log10(fidelity[1:])
+
+    # cov=True may return the covariance matrix
+    with np.errstate(invalid="ignore"):
+        pf = np.polyfit(
+            x=x,
+            y=y,
+            deg=1,
+            w=w,
         )
-        fidelity = 1 - 2 * logical_perr_per_round
-        assert not np.any(
-            fidelity < 0.0
-        ), f"Fidelity values (1-2*p) should be non-negative, but were {fidelity}."
 
-        yerr = np.sqrt(
-            logical_perr_per_round * (1 - logical_perr_per_round) / shots_all_rounds
-        )
+    # Exponentiate curve fit params to obtain decay rate
+    # epsilon and initial fidelity f_0
+    epsilon = float(0.5 * (1.0 - 10.0 ** pf[0]))
+    f_0 = float(10.0 ** pf[1])
 
-        # Take base-10 log of fidelity and find
-        # the best linear fit
-        sigma = np.abs(yerr / fidelity)[1:]
-        # Where `sigma = 0`, a weight will be infinite. This will cause
-        # a warning and error in `polyfit`. The error is enough, so let's
-        # suppress the warnings. If the error is considered confusing, we
-        # can catch and re-raise with more information.
-        with np.errstate(divide="ignore"):
-            w = 1 / sigma
-        x = np.array(all_rounds[1:])
-        y = np.log10(fidelity[1:])
+    # Interpolate x values across the range of available rounds
+    # and calculate y values based on an exponential decay with
+    # rate epsilon and initial fidelity f_0.
+    rounds_interpolated = np.linspace(
+        all_rounds[0], all_rounds[-1], interpolation_points,
+        dtype=np.float64,
+    )
+    y_interpolated = [f_0 * (1 - 2 * epsilon) ** r for r in rounds_interpolated]
+    probs_interpolated = (1.0 - np.array(y_interpolated, dtype=np.float64)) * 0.5
 
-        # cov=True may return the covariance matrix
-        with np.errstate(invalid="ignore"):
-            pf = np.polyfit(
-                x=x,
-                y=y,
-                deg=1,
-                w=w,
-            )
-
-        # Exponentiate curve fit params to obtain decay rate
-        # epsilon and initial fidelity f_0
-        epsilon = float(0.5 * (1.0 - 10.0 ** pf[0]))
-        f_0 = float(10.0 ** pf[1])
-
-        # Interpolate x values across the range of available rounds
-        # and calculate y values based on an exponential decay with
-        # rate epsilon and initial fidelity f_0.
-        rounds_interpolated = np.linspace(
-            all_rounds[0], all_rounds[-1], interpolation_points,
-            dtype=np.float64,
-        )
-        y_interpolated = [f_0 * (1 - 2 * epsilon) ** r for r in rounds_interpolated]
-        probs_interpolated = (1.0 - np.array(y_interpolated, dtype=np.float64)) * 0.5
-
-        return epsilon, rounds_interpolated, probs_interpolated, yerr
-    except Exception as ex:
-        Logging.error(ex, query_id)
-        raise
+    return epsilon, rounds_interpolated, probs_interpolated, yerr
 
 
 def calculate_lep_and_lep_stddev(
@@ -143,13 +138,9 @@ def calculate_lep_and_lep_stddev(
             )
     """
     fails, shots = np.asarray(fails), np.asarray(shots)
-    query_id = Logging.info_and_generate_uid(locals())
     lep = fails / shots
     if np.any(lep <= 0):
-        error = ValueError("Must have > 0 fails to calculate"
-                            " logical error probability.")
-        Logging.error(error, query_id)
-        raise error
+        raise ValueError("Must have > 0 fails to calculate logical error probability.")
     lep_stddev = np.sqrt(lep * (1 - lep) / shots)
 
     return lep, lep_stddev
@@ -196,15 +187,13 @@ def calculate_lambda_and_lambda_stddev(
             )
 
     """
-    query_id = Logging.info_and_generate_uid(locals())
     if min(distances) < 5:
-        Logging.warn("Lambda unreliable at low code distances."
-                        "Please use distance 5 as a minimum.", query_id)
+        warnings.warn(
+            "Lambda unreliable at low code distances. Please use distance 5 as a "
+            "minimum."
+        )
     if len(distances) < 3:
-        error = ValueError("Minimum of 3 distances are required to "
-                            "calculate lambda.")
-        Logging.error(error, query_id)
-        raise error
+        raise ValueError("Minimum of 3 distances are required to calculate lambda.")
     params, cov = np.polyfit(
         x=distances,
         y=np.log(lep_per_round),

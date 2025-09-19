@@ -4,46 +4,46 @@ from __future__ import annotations
 import os
 from pathlib import Path
 
+import deltakit_core.api.environment
 import deltakit_core.api.paths
 import pytest
-from deltakit_explorer._utils import _utils as utils
 
 
 def test_read_and_write_and_override_config_file(mocker):
-    mocker.patch("deltakit_explorer._utils._utils.APP_NAME", "qec-testplorer")
+    mocker.patch("deltakit_core.api.constants.APP_NAME", "qec-testplorer")
     config_file = deltakit_core.api.paths.get_config_file_path()
 
     # reset config file
-    utils.override_persisted_variables({}, config_file)
-    d = utils.read_persisted_variables(config_file)
+    deltakit_core.api.environment.override_persisted_variables({}, config_file)
+    d = deltakit_core.api.environment.read_persisted_variables(config_file)
     assert d == {}
 
     # add a variable for a config file
-    utils.merge_variables({"TEST": "test123"}, config_file)
-    d = utils.read_persisted_variables(config_file)
+    deltakit_core.api.environment.merge_variables({"TEST": "test123"}, config_file)
+    d = deltakit_core.api.environment.read_persisted_variables(config_file)
     assert d == ({"TEST": "test123"})
 
     # add a new variable and override and old one
-    utils.merge_variables({"TEST": "321test", "TEST1": "4"}, config_file)
-    d = utils.read_persisted_variables(config_file)
+    deltakit_core.api.environment.merge_variables({"TEST": "321test", "TEST1": "4"}, config_file)
+    d = deltakit_core.api.environment.read_persisted_variables(config_file)
     assert d == ({"TEST": "321test", "TEST1": "4"})
 
     # test that blank lines in file are ignored
     with open(config_file, "a") as f:
         f.write("\n")
-    d = utils.read_persisted_variables(config_file)
+    d = deltakit_core.api.environment.read_persisted_variables(config_file)
     assert d == ({"TEST": "321test", "TEST1": "4"})
 
-    utils.override_persisted_variables({}, config_file)
-    d = utils.read_persisted_variables(config_file)
+    deltakit_core.api.environment.override_persisted_variables({}, config_file)
+    d = deltakit_core.api.environment.read_persisted_variables(config_file)
     assert d == {}
 
 
 def test_variables_reading_to_environ(mocker):
-    mocker.patch("deltakit_explorer._utils._utils.APP_NAME", "qec-testplorer")
+    mocker.patch("deltakit_core.api.constants.APP_NAME", "qec-testplorer")
     config_file = deltakit_core.api.paths.get_config_file_path()
-    utils.override_persisted_variables({"A": "B"}, config_file)
-    utils.load_environment_variables_from_drive()
+    deltakit_core.api.environment.override_persisted_variables({"A": "B"}, config_file)
+    deltakit_core.api.environment.load_environment_variables_from_drive()
     assert os.environ.get("A") == "B"
 
 
@@ -81,7 +81,7 @@ def test_error_creating_the_folder(mocker):
 
 
 def test_recreates_the_config_folder(mocker):
-    mocker.patch("deltakit_explorer._utils._utils.APP_NAME", "qec-testplorer")
+    mocker.patch("deltakit_core.api.constants.APP_NAME", "qec-testplorer")
     directory = deltakit_core.api.paths.get_config_directory()
     file = deltakit_core.api.paths.get_config_file_path()
     if file.exists():
@@ -94,9 +94,9 @@ def test_recreates_the_config_folder(mocker):
 
 @pytest.mark.parametrize("content", ["faulty_abc", "faulty_abc=abc=abc"])
 def test_faulty_content(mocker, content):
-    mocker.patch("deltakit_explorer._utils._utils.APP_NAME", "qec-testplorer")
+    mocker.patch("deltakit_core.api.constants.APP_NAME", "qec-testplorer")
     file = deltakit_core.api.paths.get_config_file_path()
     with Path.open(file, "w", encoding="utf-8") as f:
         f.write(content)
-    utils.load_environment_variables_from_drive()
+    deltakit_core.api.environment.load_environment_variables_from_drive()
     assert os.environ.get("FAULTY_ABC") is None

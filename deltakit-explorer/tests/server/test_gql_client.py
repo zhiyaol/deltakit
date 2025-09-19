@@ -42,7 +42,7 @@ class TestGQLClient:
             )
         )
         randint = random.randint(100000, 999999)  # nosec B311
-        mocker.patch("deltakit_explorer._utils._utils.APP_NAME", f"deltakit-testplorer-{randint}")
+        mocker.patch("deltakit_core.api.constants.APP_NAME", f"deltakit-testplorer-{randint}")
 
         client = Client("http://localhost/", api_version=1)
         Client.set_token("123", validate=False)
@@ -57,7 +57,7 @@ class TestGQLClient:
         )
         randint = random.randint(100000, 999999)  # nosec B311
         mocker.patch(
-            "deltakit_explorer._utils._utils.APP_NAME",
+            "deltakit_core.api.constants.APP_NAME",
             f"deltakit-testplorer-{randint}"
         )
         client = Client("http://riverlane.com/", api_version=1)

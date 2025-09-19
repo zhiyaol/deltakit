@@ -6,9 +6,9 @@ import tempfile
 from pathlib import Path
 from unittest import mock
 
+import deltakit_core.api.environment
 import pytest
 from deltakit_core.api.paths import get_log_directory
-from deltakit_explorer._utils import _utils
 
 
 @pytest.fixture
@@ -92,19 +92,19 @@ def test_env_and_home_directory_unavailable():
 def test_read_persisted_variables(tmp_path):
     file = tmp_path / "vars.env"
     file.write_text("A=1\n\n\nB=2\n\n")
-    result = _utils.read_persisted_variables(file)
+    result = deltakit_core.api.environment.read_persisted_variables(file)
     assert result["A"] == "1"
     assert result["B"] == "2"
 
 def test_read_persisted_variables_invalid(tmp_path):
     file = tmp_path / "vars.env"
     file.write_text("A=1\nB\n")
-    result = _utils.read_persisted_variables(file)
+    result = deltakit_core.api.environment.read_persisted_variables(file)
     assert result == {}
 
 def test_merge_variables(tmp_path):
     file = tmp_path / "vars.env"
     file.write_text("A=1\n")
-    _utils.merge_variables({"B": "2"}, file)
-    result = _utils.read_persisted_variables(file)
+    deltakit_core.api.environment.merge_variables({"B": "2"}, file)
+    result = deltakit_core.api.environment.read_persisted_variables(file)
     assert result["B"] == "2"

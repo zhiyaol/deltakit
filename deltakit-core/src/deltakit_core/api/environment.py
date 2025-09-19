@@ -1,14 +1,15 @@
 # (c) Copyright Riverlane 2020-2025.
 """
-Contains a few utility functions to be used in deltakit api
+Defines utility functions to read/write environment variables.
 """
 from __future__ import annotations
 
 import csv
-import os
 from pathlib import Path
+import os
 
 from deltakit_core.api.paths import get_config_file_path
+
 
 def read_persisted_variables(file: Path) -> dict[str, str]:
     """

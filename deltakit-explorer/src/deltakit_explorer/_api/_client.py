@@ -16,7 +16,7 @@ from deltakit_explorer._api._api_client import APIClient
 from deltakit_explorer._api._api_v2_client import APIv2Client
 from deltakit_explorer._api._auth import TOKEN_VARIABLE
 from deltakit_explorer._api._gql_client import GQLClient
-from deltakit_explorer._utils import _utils as utils
+from deltakit_core.api import environment as utils
 from deltakit_explorer._utils._decorators import (
     validate_and_split_decoding, validate_and_split_simulation,
     validate_generation)

@@ -4,8 +4,8 @@ from __future__ import annotations
 
 import os
 
+import deltakit_core.api.environment
 import deltakit_core.api.paths
-from deltakit_explorer._utils import _utils as utils
 
 TOKEN_VARIABLE = "DELTAKIT_TOKEN"  # nosec B105
 TLS_DISABLE_CHECK_VARIABLE = "DELTAKIT_DISABLE_TLS_CHECK"
@@ -26,7 +26,7 @@ def get_token() -> str:
     Raises:
         RuntimeError: if token is not present at all.
     """
-    utils.load_environment_variables_from_drive()
+    deltakit_core.api.environment.load_environment_variables_from_drive()
     token = os.environ.get(TOKEN_VARIABLE)
     if token is None:
         file = deltakit_core.api.paths.get_config_file_path()
@@ -51,8 +51,8 @@ def set_token(token: str):
         token (str): a string auth token.
     """
     update_dict = {TOKEN_VARIABLE: token}
-    utils.set_variables(update_dict, True)
-    utils.merge_variables(update_dict, deltakit_core.api.paths.get_config_file_path())
+    deltakit_core.api.environment.set_variables(update_dict, True)
+    deltakit_core.api.environment.merge_variables(update_dict, deltakit_core.api.paths.get_config_file_path())
 
 
 def https_verification_disabled() -> bool:
@@ -75,4 +75,4 @@ def set_https_verification(enabled: bool):
     """
     val = str(not enabled).lower()
     os.environ[TLS_DISABLE_CHECK_VARIABLE] = val
-    utils.set_variables({TLS_DISABLE_CHECK_VARIABLE: val})
+    deltakit_core.api.environment.set_variables({TLS_DISABLE_CHECK_VARIABLE: val})

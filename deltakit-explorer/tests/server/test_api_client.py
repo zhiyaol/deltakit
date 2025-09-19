@@ -28,7 +28,7 @@ from pytest_mock import MockerFixture
 def mock_client(request, mocker):
     """Server object which is used to replace real server calls."""
     version = request.param
-    mocker.patch("deltakit_explorer._utils._utils.APP_NAME", "deltakit-testplorer")
+    mocker.patch("deltakit_core.api.constants.APP_NAME", "deltakit-testplorer")
     Client.set_token("1234", validate=False)
     return Client("", 5000, version)
 
@@ -415,7 +415,7 @@ class TestClient:
 
     def test_kill_request_v1(self, mocker):
         # fix the auth token
-        mocker.patch("deltakit_explorer._utils._utils.APP_NAME", "deltakit-testplorer")
+        mocker.patch("deltakit_core.api.constants.APP_NAME", "deltakit-testplorer")
         Client.set_token("1234qwerty", False)
         os.environ.pop(DELTAKIT_SERVER_URL_ENV, "")
         client = Client.get_instance(api_version=1)

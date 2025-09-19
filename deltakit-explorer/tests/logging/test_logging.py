@@ -81,7 +81,7 @@ class TestLogging:
         assert uid in logline
 
     def test_info_logs_indirectly(self, mocker):
-        mocker.patch("deltakit_explorer._utils._utils.APP_NAME", "deltakit-testplorer")
+        mocker.patch("deltakit_core.api.constants.APP_NAME", "deltakit-testplorer")
         _auth.set_token("123")
         client = Client("base")
         with pytest.raises(Exception):

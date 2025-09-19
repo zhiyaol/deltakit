@@ -9,12 +9,12 @@ import deltakit_core.api.paths
 import pytest
 import requests
 from deltakit_explorer._api import _auth
-from deltakit_explorer._utils import _utils as utils
+from deltakit_core.api import environment as utils
 
 
 def test_set_token(mocker):
     randint = random.randint(100000, 999999)  # nosec B311
-    mocker.patch("deltakit_explorer._utils._utils.APP_NAME", f"qec-testplorer-{randint}")
+    mocker.patch("deltakit_core.api.constants.APP_NAME", f"qec-testplorer-{randint}")
     token = "2134"  # nosec B105
     _auth.set_token(token)
     assert _auth.get_token() == token
@@ -22,7 +22,7 @@ def test_set_token(mocker):
 
 def test_if_no_token_raises(mocker):
     randint = random.randint(100000, 999999)  # nosec B311
-    mocker.patch("deltakit_explorer._utils._utils.APP_NAME", f"qec-testplorer-{randint}")
+    mocker.patch("deltakit_core.api.constants.APP_NAME", f"qec-testplorer-{randint}")
     utils.override_persisted_variables({}, deltakit_core.api.paths.get_config_file_path())
     os.environ.pop(_auth.TOKEN_VARIABLE)
     with pytest.raises(RuntimeError, match=r"^Token could not be found neither"):

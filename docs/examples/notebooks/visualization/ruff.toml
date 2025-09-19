@@ -1,0 +1,11 @@
+# Linting configuration for visualization examples
+extend = "../../../../ruff.toml"
+
+[lint.per-file-ignores]
+"snippet.py" = [
+    "E501",    # line length > 88 (fix later)
+    "PLR2004", # magic values
+    "PLR0912",
+    "PLR0913",
+    "PLR0915", # too many branches, arguments, statements
+]

@@ -7,7 +7,7 @@ jobs:
   run-notebooks:
     runs-on: ubuntu-latest
     strategy:
-      matrix: 
+      matrix:
         notebook: [
           "demo/4. advanced demo.ipynb",
           "google_qmem_experiment/decode.ipynb",
@@ -16,7 +16,8 @@ jobs:
           "simulation/shot_analysis.ipynb",
           "simulation/stim_simulation.ipynb",
           "simulation/ac_decoding.ipynb",
-          "simulation/leakage_demo.ipynb"
+          "simulation/leakage_demo.ipynb",
+          "visualization/surface_code_demo.ipynb"
         ]
       fail-fast: false
     steps:

@@ -72,7 +72,8 @@ docs = [
     "vale>=3.12.0.0",
     "jupytext>=1.17.0,<2",
     "jupyter>=1.1.1,<2",
-    "ipykernel >=6.29.5,<7"
+    "ipykernel >=6.29.5,<7",
+    "crumpy>=0.2.0"
 ]
 # any changes here should be duplicated to dev dependency list
 build = [
@@ -114,6 +115,7 @@ dev = [
     "vale>=3.12.0.0",
     "jupytext>=1.17.0,<2",
     "jupyter>=1.1.1,<2",
+    "crumpy>=0.2.0",
     # "deltakit[build]",
     "build>=1.2.0",
     # "deltakit[security]",
@@ -171,7 +173,7 @@ omit = [
 ignore = ["DEP003"]
 
 [tool.deptry.per_rule_ignores]
-DEP001 = ["tests"]
+DEP001 = ["tests", "examples/notebooks/visualization/snippet.py"]
 DEP002 = ['deltakit', 'deltakit_explorer', 'deltakit_circuit', 'deltakit_core', 'deltakit_decode',
           'pytest-cov', 'pytest-asyncio', 'pytest-skip-slow', 'pytest-testmon',
           'mypy', 'ruff', 'isort',

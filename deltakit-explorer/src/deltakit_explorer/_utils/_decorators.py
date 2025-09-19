@@ -20,7 +20,7 @@ from deltakit_explorer.data._data_analysis import \
 from deltakit_explorer.data._data_analysis import \
     get_simulation_response_size_estimate as get_sim_size
 from deltakit_explorer.data._data_analysis import has_leakage
-from deltakit_explorer.enums._api_enums import (DataFormat, DecoderType,
+from deltakit_core.api.enums import (DataFormat, DecoderType,
                                                 QECECodeType)
 from deltakit_explorer.types._exceptions import ServerException
 from deltakit_explorer.types._experiment_types import QECExperimentDefinition

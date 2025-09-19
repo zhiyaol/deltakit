@@ -8,7 +8,8 @@ import stim
 if TYPE_CHECKING:
     from deltakit_core.decoding_graphs import OrderedDecodingEdges, OrderedSyndrome
 
-from deltakit_explorer import Client, enums, types
+from deltakit_explorer import Client, types
+from deltakit_core.api.enums import DecoderType
 
 
 class _CloudDecoder:
@@ -41,7 +42,7 @@ class _CloudDecoder:
 
     """
 
-    _decoder_type: enums.DecoderType = enums.DecoderType.MWPM
+    _decoder_type: DecoderType = DecoderType.MWPM
 
     def __init__(
         self,
@@ -146,7 +147,7 @@ class MWPMDecoder(_CloudDecoder):
     This cloud-based decoder implements Minimum Weight Perfect Matching
     (https://arxiv.org/abs/2303.15933).
     """
-    _decoder_type = enums.DecoderType.MWPM
+    _decoder_type = DecoderType.MWPM
 
 
 class CCDecoder(_CloudDecoder):
@@ -179,7 +180,7 @@ class CCDecoder(_CloudDecoder):
     This cloud-based decoder implements Collision Clustering
     (https://arxiv.org/abs/2309.05558).
     """
-    _decoder_type = enums.DecoderType.CC
+    _decoder_type = DecoderType.CC
 
 
 class BeliefMatchingDecoder(_CloudDecoder):
@@ -212,7 +213,7 @@ class BeliefMatchingDecoder(_CloudDecoder):
     This cloud-based decoder implements Belief Matching
     (https://journals.aps.org/prx/abstract/10.1103/PhysRevX.13.031007).
     """
-    _decoder_type = enums.DecoderType.BELIEF_MATCHING
+    _decoder_type = DecoderType.BELIEF_MATCHING
 
 
 class BPOSDecoder(_CloudDecoder):
@@ -249,7 +250,7 @@ class BPOSDecoder(_CloudDecoder):
     This cloud-based decoder implements Belief Propagation - Ordered Statistics Decoding
     (https://quantum-journal.org/papers/q-2021-11-22-585/).
     """
-    _decoder_type = enums.DecoderType.BP_OSD
+    _decoder_type = DecoderType.BP_OSD
 
 
 class ACDecoder(_CloudDecoder):
@@ -297,7 +298,7 @@ class ACDecoder(_CloudDecoder):
     This cloud-based decoder implements Ambiguity Clustering
     (https://arxiv.org/abs/2406.14527).
     """
-    _decoder_type = enums.DecoderType.AC
+    _decoder_type = DecoderType.AC
 
 
 class LCDecoder(_CloudDecoder):
@@ -337,7 +338,7 @@ class LCDecoder(_CloudDecoder):
     This cloud-based decoder implements the Local Clustering Decoder algorithm
     (https://arxiv.org/abs/2411.10343).
     """
-    _decoder_type = enums.DecoderType.LCD
+    _decoder_type = DecoderType.LCD
 
 
     def __init__(

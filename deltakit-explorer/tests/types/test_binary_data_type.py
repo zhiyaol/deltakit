@@ -4,7 +4,7 @@ from __future__ import annotations
 import numpy as np
 import pytest
 import stim
-from deltakit_explorer.enums import DataFormat
+from deltakit_core.api.enums import DataFormat
 from deltakit_explorer.types import (BinaryDataType, DataString,
                                      DetectionEvents, LeakageFlags,
                                      Measurements, ObservableFlips)

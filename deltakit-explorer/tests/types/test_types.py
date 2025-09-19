@@ -8,7 +8,7 @@ from dataclasses import dataclass
 import numpy as np
 import pytest
 from deltakit_circuit.gates import PauliBasis
-from deltakit_explorer.enums import DataFormat, QECECodeType, QECExperimentType
+from deltakit_core.api.enums import DataFormat, QECECodeType, QECExperimentType
 from deltakit_explorer.types import (BinaryDataType, CircuitParameters,
                                      DataString, MatrixSpecifications,
                                      PhysicalNoiseModel, QECExperiment,

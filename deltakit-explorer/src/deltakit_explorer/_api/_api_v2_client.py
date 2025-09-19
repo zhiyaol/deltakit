@@ -17,7 +17,7 @@ from deltakit_explorer._api._api_client import APIClient, APIEndpoints
 from deltakit_explorer._api._auth import (get_token,
                                           set_token)
 from deltakit_explorer._utils._logging import Logging
-from deltakit_explorer.enums._api_enums import DataFormat
+from deltakit_core.api.enums import DataFormat
 from deltakit_explorer.types._exceptions import ServerException
 from deltakit_explorer.types._experiment_types import QECExperimentDefinition
 from deltakit_explorer.types._types import (BinaryDataType, DataString,

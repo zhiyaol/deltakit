@@ -9,6 +9,7 @@ from __future__ import annotations
 
 from typing import Optional
 
+from deltakit_core.api.enums import QECECodeType, QECExperimentType
 import deltakit_explorer
 import stim
 from deltakit_circuit import Circuit
@@ -76,7 +77,7 @@ def css_code_memory_circuit(
             "`use_iswap_gates == True` is only supported when a `client` object is provided."
         )
     if client is not None:
-        return _cloud_css_code_experiment_circuit(deltakit_explorer.enums.QECExperimentType.QUANTUM_MEMORY,
+        return _cloud_css_code_experiment_circuit(QECExperimentType.QUANTUM_MEMORY,
                                               css_code, num_rounds, logical_basis, client, use_iswap_gates)
     data_qubit_init_stage = (
         css_code.encode_logical_zeroes()
@@ -95,7 +96,7 @@ def css_code_memory_circuit(
 
 
 def _cloud_css_code_experiment_circuit(
-    experiment_type: deltakit_explorer.enums.QECExperimentType,
+    experiment_type: QECExperimentType,
     css_code: StabiliserCode,
     num_rounds: int,
     logical_basis: PauliBasis,
@@ -144,11 +145,11 @@ def _cloud_css_code_experiment_circuit(
         raise NotImplementedError("A `client` is required to obtain a stability circuit.")
 
     code_types = {
-        RotatedPlanarCode: deltakit_explorer.enums.QECECodeType.ROTATED_PLANAR,
-        UnrotatedPlanarCode: deltakit_explorer.enums.QECECodeType.UNROTATED_PLANAR,
-        UnrotatedToricCode: deltakit_explorer.enums.QECECodeType.UNROTATED_TORIC,
-        RepetitionCode: deltakit_explorer.enums.QECECodeType.REPETITION,
-        BivariateBicycleCode: deltakit_explorer.enums.QECECodeType.BIVARIATE_BICYCLE,
+        RotatedPlanarCode: QECECodeType.ROTATED_PLANAR,
+        UnrotatedPlanarCode: QECECodeType.UNROTATED_PLANAR,
+        UnrotatedToricCode: QECECodeType.UNROTATED_TORIC,
+        RepetitionCode: QECECodeType.REPETITION,
+        BivariateBicycleCode: QECECodeType.BIVARIATE_BICYCLE,
     }
     code_type = code_types[css_code.__class__]
 
@@ -230,5 +231,5 @@ def css_code_stability_circuit(
     ValueError :
         If `css_code` is not of a valid type.
     """
-    return _cloud_css_code_experiment_circuit(deltakit_explorer.enums.QECExperimentType.STABILITY,
+    return _cloud_css_code_experiment_circuit(QECExperimentType.STABILITY,
                                               css_code, num_rounds, logical_basis, client, use_iswap_gates)

@@ -10,7 +10,7 @@ from typing import Optional
 import deltakit_explorer
 import numpy as np
 import stim
-from deltakit_explorer.enums._api_enums import DataFormat
+from deltakit_core.api.enums import DataFormat
 from deltakit_explorer.types._types import LeakageFlags, Measurements
 
 

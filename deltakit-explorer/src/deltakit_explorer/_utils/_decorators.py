@@ -22,9 +22,9 @@ from deltakit_explorer.data._data_analysis import \
 from deltakit_explorer.data._data_analysis import has_leakage
 from deltakit_core.api.enums import (DataFormat, DecoderType,
                                                 QECECodeType)
-from deltakit_explorer.types._exceptions import ServerException
-from deltakit_explorer.types._experiment_types import QECExperimentDefinition
-from deltakit_explorer.types._types import (CircuitParameters, Decoder,
+from deltakit_core.types._exceptions import ServerException
+from deltakit_core.types._experiment_types import QECExperimentDefinition
+from deltakit_core.types._types import (CircuitParameters, Decoder,
                                             DecodingResult, DetectionEvents,
                                             LeakageFlags, Measurements,
                                             ObservableFlips)

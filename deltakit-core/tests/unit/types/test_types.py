@@ -1,21 +1,24 @@
 # (c) Copyright Riverlane 2020-2025.
 from __future__ import annotations
 
-import pathlib
+from pathlib import Path
 from tempfile import TemporaryDirectory
 from dataclasses import dataclass
 
 import numpy as np
 import pytest
-from deltakit_circuit.gates import PauliBasis
 from deltakit_core.api.enums import DataFormat, QECECodeType, QECExperimentType
-from deltakit_explorer.types import (BinaryDataType, CircuitParameters,
-                                     DataString, MatrixSpecifications,
-                                     PhysicalNoiseModel, QECExperiment,
-                                     QECExperimentDefinition, RAMData, Sizes,
-                                     TypedData, TypedDataFile, TypedDataString)
-from deltakit_explorer.types._types import JSONable
+from deltakit_core.types import (BinaryDataType, CircuitParameters,
+                                 DataString, MatrixSpecifications,
+                                 PhysicalNoiseModel, QECExperiment,
+                                 QECExperimentDefinition, RAMData, Sizes,
+                                 TypedData, TypedDataFile, TypedDataString)
+from deltakit_core.types._types import JSONable
 
+_DELTAKIT_CORE_FOLDER = Path(__file__).parent.parent.parent.parent
+_DELTAKIT_FOLDER = _DELTAKIT_CORE_FOLDER.parent
+_DELTAKIT_EXPLORER_FOLDER = _DELTAKIT_FOLDER / "deltakit-explorer"
+_RESOURCES_PATH = _DELTAKIT_EXPLORER_FOLDER / "tests" / "resources"
 
 class TestQECExperimentDefinitionAndNested:
 
@@ -38,7 +41,7 @@ class TestQECExperimentDefinitionAndNested:
         definition = QECExperimentDefinition(
             experiment_type=QECExperimentType.QUANTUM_MEMORY,
             code_type=QECECodeType.BIVARIATE_BICYCLE,
-            observable_basis=PauliBasis.X,
+            observable_basis="X",
             num_rounds=3,
             basis_gates=["CX", "H"],
             parameters=CircuitParameters(mspec, sizes),
@@ -53,7 +56,7 @@ class TestQECExperimentDefinitionAndNested:
         definition = QECExperimentDefinition(
             experiment_type=QECExperimentType.QUANTUM_MEMORY,
             code_type=QECECodeType.BIVARIATE_BICYCLE,
-            observable_basis=PauliBasis.X,
+            observable_basis="X",
             num_rounds=3,
             basis_gates=["CX", "H"],
         )
@@ -65,7 +68,7 @@ class TestQECExperimentDefinitionAndNested:
             3, 3, basis_gates=["CX", "H"],
         )
         assert definition.code_type == QECECodeType.ROTATED_PLANAR
-        assert definition.observable_basis == PauliBasis.Z
+        assert definition.observable_basis == "Z"
         assert definition.experiment_type == QECExperimentType.QUANTUM_MEMORY
         assert definition.get_parameters_gql_string() == {
             'sizes': {'sizes': [3, 3]}, 'matrixSpecifications': None,
@@ -183,7 +186,7 @@ class TestTypedDataString:
         TypedDataString.from_data(
             TypedDataFile(
                 DataFormat.F01,
-                pathlib.Path(__file__).parent / "../resources/rep_code_noisy_stim_dets.01",
+                _RESOURCES_PATH / "rep_code_noisy_stim_dets.01",
             )
         )
 
@@ -219,7 +222,7 @@ class TestTypedDataFile:
     )
     def test_typed_data_files(self, data, data_format, tmp_path):
         p = tmp_path / "data"
-        with pathlib.Path.open(p, "wb") as f:
+        with Path.open(p, "wb") as f:
             f.write(data)
         holder = TypedDataFile(data_format=data_format, content=p, data_width=5)
         assert holder.as_01_string().strip() == "00101\n00101"
@@ -242,7 +245,7 @@ class TestTypedDataFile:
 
     def test_typeddatafile_not_implemented(self):
         with TemporaryDirectory() as direct:
-            file = pathlib.Path(direct) / "file.txt"
+            file = Path(direct) / "file.txt"
             file.write_text("data")
             tdf = TypedDataFile(data_format="INVALID", content=file)
             with pytest.raises(NotImplementedError):
@@ -261,18 +264,18 @@ class TestQECExperiment:
 
     def test_qec_experiment_from_circuit_and_measurements_no_sweeps(self):
         exp = QECExperiment.from_circuit_and_measurements(
-            pathlib.Path(__file__).parent / "../resources/rep_code_mutated_default_noise_data.stim",
-            pathlib.Path(__file__).parent / "../resources/rep_code_noisy_stim_dets.01",
+            _RESOURCES_PATH / "rep_code_mutated_default_noise_data.stim",
+            _RESOURCES_PATH / "rep_code_noisy_stim_dets.01",
             DataFormat.F01,
         )
         assert exp.measurements.as_numpy().shape == (5000, 8)
 
     def test_qec_experiment_from_circuit_and_measurements_with_sweeps(self):
         exp = QECExperiment.from_circuit_and_measurements(
-            pathlib.Path(__file__).parent / "../resources/rep_code_mutated_default_noise_data.stim",
-            pathlib.Path(__file__).parent / "../resources/rep_code_noisy_stim_dets.01",
+            _RESOURCES_PATH / "rep_code_mutated_default_noise_data.stim",
+            _RESOURCES_PATH / "rep_code_noisy_stim_dets.01",
             DataFormat.F01,
-            pathlib.Path(__file__).parent / "../resources/rep_code_noisy_stim_dets.01",
+            _RESOURCES_PATH / "rep_code_noisy_stim_dets.01",
             DataFormat.F01,
         )
         assert exp.measurements.as_numpy().shape == (5000, 8)
@@ -281,10 +284,10 @@ class TestQECExperiment:
     def test_qec_experiment_from_circuit_and_measurements_with_failed_sweeps_raises(self):
         with pytest.raises(ValueError):
             QECExperiment.from_circuit_and_measurements(
-                pathlib.Path("tests/resources/rep_code_mutated_default_noise_data.stim"),
-                pathlib.Path("tests/resources/rep_code_noisy_stim_dets.01"),
+                _RESOURCES_PATH / "rep_code_mutated_default_noise_data.stim",
+                _RESOURCES_PATH / "rep_code_noisy_stim_dets.01",
                 DataFormat.F01,
-                pathlib.Path("tests/resources/rep_code_noisy_stim_dets.01"),
+                _RESOURCES_PATH / "rep_code_noisy_stim_dets.01",
             )
 
 

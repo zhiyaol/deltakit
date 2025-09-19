@@ -11,7 +11,7 @@ import deltakit_explorer
 import numpy as np
 import stim
 from deltakit_core.api.enums import DataFormat
-from deltakit_explorer.types._types import LeakageFlags, Measurements
+from deltakit_core.types._types import LeakageFlags, Measurements
 
 
 def simulate_with_stim(

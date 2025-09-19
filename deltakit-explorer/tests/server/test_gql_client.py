@@ -11,7 +11,7 @@ import pytest
 import requests
 from deltakit_explorer._api._client import Client
 from deltakit_explorer._api._gql_client import GQLClient
-from deltakit_explorer.types._exceptions import ServerException
+from deltakit_core.types._exceptions import ServerException
 
 
 # This tests GQLClient, which is the underlying client for v1 of the API.

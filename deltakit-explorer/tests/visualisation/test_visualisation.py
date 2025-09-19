@@ -8,7 +8,7 @@ import matplotlib.image as img
 import matplotlib.pyplot as plt
 import numpy as np
 from deltakit_explorer import visualisation
-from deltakit_explorer.types import QubitCoordinateToDetectorMapping
+from deltakit_core.types import QubitCoordinateToDetectorMapping
 
 
 class TestVisualisation:

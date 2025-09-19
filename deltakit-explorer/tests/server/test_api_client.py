@@ -14,7 +14,7 @@ from deltakit_explorer._utils._utils import (DELTAKIT_SERVER_DEFAULT_URL_ENV,
                                              DELTAKIT_SERVER_URL_ENV)
 from deltakit_core.api.enums import (DataFormat, DecoderType, QECECodeType,
                                      QECExperimentType)
-from deltakit_explorer.types import (CircuitParameters, DataString, Decoder,
+from deltakit_core.types import (CircuitParameters, DataString, Decoder,
                                      DecodingResult, DetectionEvents,
                                      LeakageFlags, Measurements, NoiseModel,
                                      ObservableFlips, PhysicalNoiseModel,

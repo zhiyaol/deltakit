@@ -6,15 +6,14 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any
+from typing import Any, Literal
 
 import stim
-from deltakit_circuit.gates import PauliBasis
 from deltakit_core.api.enums import (DataFormat, QECECodeType,
-                                                QECExperimentType)
-from deltakit_explorer.types._types import (BinaryDataType, CircuitParameters,
-                                            DetectionEvents, JSONable, LeakageFlags,
-                                            Measurements, ObservableFlips)
+                                     QECExperimentType)
+from deltakit_core.types._types import (BinaryDataType, CircuitParameters,
+                                        DetectionEvents, JSONable, LeakageFlags,
+                                        Measurements, ObservableFlips)
 
 @dataclass
 class QECExperiment:
@@ -118,7 +117,7 @@ class QECExperimentDefinition(JSONable):
     code_type: QECECodeType
     """QEC code, e.g. Rotated Planar Code."""
 
-    observable_basis: PauliBasis
+    observable_basis: Literal["X", "Z"]
     """Basis, in which observable is measured. E.g. X or Z."""
 
     num_rounds: int
@@ -150,7 +149,7 @@ class QECExperimentDefinition(JSONable):
         return QECExperimentDefinition(
             experiment_type=QECExperimentType.QUANTUM_MEMORY,
             code_type=QECECodeType.REPETITION,
-            observable_basis=PauliBasis.Z,
+            observable_basis="Z",
             num_rounds=num_rounds,
             basis_gates=basis_gates,
             parameters=CircuitParameters.from_sizes([distance]),
@@ -167,7 +166,7 @@ class QECExperimentDefinition(JSONable):
         return QECExperimentDefinition(
             experiment_type=QECExperimentType.QUANTUM_MEMORY,
             code_type=QECECodeType.ROTATED_PLANAR,
-            observable_basis=PauliBasis.Z,
+            observable_basis="Z",
             num_rounds=num_rounds,
             basis_gates=basis_gates,
             parameters=CircuitParameters.from_sizes([distance, distance]),

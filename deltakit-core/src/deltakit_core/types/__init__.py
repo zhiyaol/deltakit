@@ -1,10 +1,10 @@
 # (c) Copyright Riverlane 2020-2025.
 """Description of ``deltakit.explorer.types`` namespace here."""
 
-from deltakit_explorer.types._data_string import DataString
-from deltakit_explorer.types._experiment_types import (QECExperiment,
+from deltakit_core.types._data_string import DataString
+from deltakit_core.types._experiment_types import (QECExperiment,
                                                        QECExperimentDefinition)
-from deltakit_explorer.types._types import (BinaryDataType, CircuitParameters,
+from deltakit_core.types._types import (BinaryDataType, CircuitParameters,
                                             Decoder, DecodingResult,
                                             DetectionEvents, LeakageFlags,
                                             MatrixSpecifications, Measurements,

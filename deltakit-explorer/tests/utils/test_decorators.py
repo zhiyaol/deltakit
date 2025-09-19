@@ -1,9 +1,9 @@
 import pytest
 import numpy as np
 from deltakit_explorer._utils._decorators import validate_and_split_decoding, validate_generation
-from deltakit_explorer.types._types import DetectionEvents, ObservableFlips, Decoder
+from deltakit_core.types._types import DetectionEvents, ObservableFlips, Decoder
 from deltakit_core.api.enums import DecoderType, QECECodeType
-from deltakit_explorer.types._experiment_types import QECExperimentDefinition, CircuitParameters
+from deltakit_core.types._experiment_types import QECExperimentDefinition, CircuitParameters
 
 
 @pytest.mark.parametrize("decoder_type", [DecoderType.MWPM, DecoderType.LCD, DecoderType.BP_OSD])

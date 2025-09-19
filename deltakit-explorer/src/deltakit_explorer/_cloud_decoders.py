@@ -1,6 +1,7 @@
 from typing import TYPE_CHECKING, Any, Optional
 
 import deltakit_circuit
+from deltakit_core.types._types import Decoder, DetectionEvents, LeakageFlags, ObservableFlips
 import numpy as np
 import numpy.typing as npt
 import stim
@@ -8,7 +9,7 @@ import stim
 if TYPE_CHECKING:
     from deltakit_core.decoding_graphs import OrderedDecodingEdges, OrderedSyndrome
 
-from deltakit_explorer import Client, types
+from deltakit_explorer import Client
 from deltakit_core.api.enums import DecoderType
 
 
@@ -79,20 +80,20 @@ class _CloudDecoder:
         ):
         """The method decodes the batch of syndromes to boolean values."""
         num_shots = syndrome_batch.shape[0]
-        detectors = types.DetectionEvents(syndrome_batch)
+        detectors = DetectionEvents(syndrome_batch)
         if self.num_observables < 1:
             raise ValueError(
                 "Circuit must have at least one observable. "
                 "Please make sure your circuit has observables or provide "
                 "`num_observables` when instantiating an `LCDecoder`."
             )
-        observables = types.ObservableFlips(
+        observables = ObservableFlips(
             np.zeros((num_shots, self.num_observables), dtype=syndrome_batch.dtype)
         )
         leakage = None
         if leakage_batch is not None:
-            leakage = types.LeakageFlags(leakage_batch)
-        decoder = types.Decoder(
+            leakage = LeakageFlags(leakage_batch)
+        decoder = Decoder(
             decoder_type=self._decoder_type,
             use_experimental_graph=self.use_experimental_graph,
             parameters=self.decoder_parameters

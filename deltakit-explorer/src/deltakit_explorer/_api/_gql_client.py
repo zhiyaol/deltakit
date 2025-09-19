@@ -22,12 +22,12 @@ from deltakit_explorer._api._auth import (get_token,
                                           set_token)
 from deltakit_explorer._utils._logging import Logging
 from deltakit_core.api.enums import DataFormat, APIEndpoints
-from deltakit_explorer.types import (DataString, Decoder, DecodingResult,
+from deltakit_core.types import (DataString, Decoder, DecodingResult,
                                      DetectionEvents, LeakageFlags, Measurements,
                                      NoiseModel, ObservableFlips,
                                      QubitCoordinateToDetectorMapping)
-from deltakit_explorer.types._exceptions import ServerException
-from deltakit_explorer.types._experiment_types import QECExperimentDefinition
+from deltakit_core.types._exceptions import ServerException
+from deltakit_core.types._experiment_types import QECExperimentDefinition
 from gql import Client, gql
 from gql.client import SyncClientSession
 from gql.transport.exceptions import TransportQueryError
@@ -259,8 +259,7 @@ class GQLClient(APIClient):
             variable_values={
                 "expType": experiment_definition.experiment_type.value,
                 "codeType": experiment_definition.code_type.value,
-                "observableBasis":
-                    experiment_definition.observable_basis.value,
+                "observableBasis": experiment_definition.observable_basis,
                 "basisGates": experiment_definition.basis_gates,
                 "rounds": experiment_definition.num_rounds,
                 "outputCircuitLocation": "",

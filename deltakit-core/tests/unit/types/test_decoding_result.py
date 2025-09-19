@@ -4,7 +4,7 @@ from __future__ import annotations
 import numpy as np
 import pytest
 from deltakit_core.api.enums import DataFormat
-from deltakit_explorer.types import BinaryDataType, DataString, DecodingResult
+from deltakit_core.types import BinaryDataType, DataString, DecodingResult
 
 
 @pytest.mark.parametrize("pred", [None, {"uid": None}, {"uid": "duck://2020"}])

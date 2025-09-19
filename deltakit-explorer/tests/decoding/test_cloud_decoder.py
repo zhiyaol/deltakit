@@ -1,10 +1,11 @@
 import os
 
 import deltakit_circuit
+from deltakit_core.types._types import DecodingResult
 import numpy as np
 import pytest
 import stim
-from deltakit_explorer import Client, types, _api
+from deltakit_explorer import Client, _api
 from deltakit_explorer._cloud_decoders import (ACDecoder,
                                                BeliefMatchingDecoder,
                                                BPOSDecoder, CCDecoder,
@@ -86,7 +87,7 @@ class TestCloudDecoder:
     def test_decoder_batch_to_logical_flip(self, decoder_class, mocker):
         circuit = stim.Circuit("M 0 1\nOBSERVABLE_INCLUDE(0) rec[-1]")
         client = Client("http://localhost")
-        result = types.DecodingResult(
+        result = DecodingResult(
             # some 01-compatible string
             predictionsFile={"uid": "duck://310a300a"},
             fails=1,
@@ -107,7 +108,7 @@ class TestCloudDecoder:
     def test_lc_decoder_batch_to_logical_flip(self, mocker):
         circuit = "SOME NON_STIM TEXT"
         client = Client("http://localhost")
-        result = types.DecodingResult(
+        result = DecodingResult(
             # some 01-compatible string
             predictionsFile={"uid": "duck://310a300a"},
             fails=1,

@@ -7,7 +7,7 @@ import pytest
 import stim
 from deltakit_explorer import simulation
 from deltakit_explorer._api._client import Client
-from deltakit_explorer.types import Measurements, LeakageFlags
+from deltakit_core.types import Measurements, LeakageFlags
 
 
 class TestStimSimulation:

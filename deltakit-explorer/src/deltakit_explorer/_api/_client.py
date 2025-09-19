@@ -21,9 +21,9 @@ from deltakit_explorer._utils._decorators import (
     validate_generation)
 from deltakit_explorer._utils._logging import Logging
 from deltakit_explorer.data._data_analysis import has_leakage
-from deltakit_explorer.types._experiment_types import (QECExperiment,
+from deltakit_core.types._experiment_types import (QECExperiment,
                                                        QECExperimentDefinition)
-from deltakit_explorer.types._types import (BinaryDataType, Decoder,
+from deltakit_core.types._types import (BinaryDataType, Decoder,
                                             DecodingResult, DetectionEvents,
                                             LeakageFlags, Measurements,
                                             ObservableFlips,

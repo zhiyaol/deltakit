@@ -5,7 +5,7 @@ import numpy as np
 import pytest
 import stim
 from deltakit_core.api.enums import DataFormat
-from deltakit_explorer.types import (BinaryDataType, DataString,
+from deltakit_core.types import (BinaryDataType, DataString,
                                      DetectionEvents, LeakageFlags,
                                      Measurements, ObservableFlips)
 

@@ -8,11 +8,11 @@ import numpy as np
 import numpy.typing as npt
 import stim
 from deltakit_core.api.enums import APIEndpoints
-from deltakit_explorer.types import (Decoder, DecodingResult, DetectionEvents,
+from deltakit_core.types import (Decoder, DecodingResult, DetectionEvents,
                                      LeakageFlags, Measurements, NoiseModel,
                                      ObservableFlips,
                                      QubitCoordinateToDetectorMapping)
-from deltakit_explorer.types._experiment_types import QECExperimentDefinition
+from deltakit_core.types._experiment_types import QECExperimentDefinition
 
 
 class APIClient(ABC):  # pragma: nocover

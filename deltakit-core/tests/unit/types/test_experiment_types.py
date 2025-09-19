@@ -1,13 +1,13 @@
 import pytest
-from deltakit_explorer.types._experiment_types import QECExperimentDefinition, QECExperimentType, QECECodeType, PauliBasis
-from deltakit_explorer.types._experiment_types import QECExperiment
+from deltakit_core.types._experiment_types import QECExperimentDefinition, QECExperimentType, QECECodeType
+from deltakit_core.types._experiment_types import QECExperiment
 
 
 def test_get_parameters_gql_string_none():
     exp = QECExperimentDefinition(
         experiment_type=QECExperimentType.QUANTUM_MEMORY,
         code_type=QECECodeType.REPETITION,
-        observable_basis=PauliBasis.Z,
+        observable_basis="Z",
         num_rounds=1,
         basis_gates=None,
         parameters=None

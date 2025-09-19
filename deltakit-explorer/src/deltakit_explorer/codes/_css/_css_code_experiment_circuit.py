@@ -10,6 +10,8 @@ from __future__ import annotations
 from typing import Optional
 
 from deltakit_core.api.enums import QECECodeType, QECExperimentType
+from deltakit_core.types._experiment_types import QECExperimentDefinition
+from deltakit_core.types._types import CircuitParameters
 import deltakit_explorer
 import stim
 from deltakit_circuit import Circuit
@@ -154,15 +156,15 @@ def _cloud_css_code_experiment_circuit(
     code_type = code_types[css_code.__class__]
 
     if isinstance(css_code, PlanarCode):
-        parameters = deltakit_explorer.types.CircuitParameters.from_sizes(
+        parameters = CircuitParameters.from_sizes(
             (css_code.width, css_code.height)
         )
     elif isinstance(css_code, RepetitionCode):
-        parameters = deltakit_explorer.types.CircuitParameters.from_sizes(
+        parameters = CircuitParameters.from_sizes(
             (css_code.distance,)
         )
     elif isinstance(css_code, BivariateBicycleCode):
-        parameters=deltakit_explorer.types.CircuitParameters.from_matrix_specification(
+        parameters=CircuitParameters.from_matrix_specification(
             param_l=css_code.param_l,
             param_m=css_code.param_m,
             m_A_powers=css_code.m_A_powers,
@@ -180,7 +182,7 @@ def _cloud_css_code_experiment_circuit(
         ]
 
     circuit = client.generate_circuit(
-        deltakit_explorer.types.QECExperimentDefinition(
+        QECExperimentDefinition(
             experiment_type=experiment_type,
             code_type=code_type,
             observable_basis=logical_basis,

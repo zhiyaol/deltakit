@@ -3,7 +3,7 @@ from __future__ import annotations
 
 import os
 
-from deltakit_explorer._utils._utils import DELTAKIT_SERVER_URL_ENV
+from deltakit_core.api.constants import DELTAKIT_SERVER_URL_ENV
 
 
 def pytest_sessionstart(session):

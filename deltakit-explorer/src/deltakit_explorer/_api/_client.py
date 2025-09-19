@@ -7,6 +7,7 @@ from __future__ import annotations
 
 import os
 
+import deltakit_core.api.constants
 import numpy as np
 import numpy.typing as npt
 import stim
@@ -84,8 +85,8 @@ class Client:
         """
         utils.load_environment_variables_from_drive()
         server_name = os.environ.get(
-            utils.DELTAKIT_SERVER_URL_ENV,
-            default=utils.DELTAKIT_SERVER_DEFAULT_URL_ENV,
+            deltakit_core.api.constants.DELTAKIT_SERVER_URL_ENV,
+            default=deltakit_core.api.constants.DELTAKIT_SERVER_DEFAULT_URL_ENV,
         )
         return Client(base_url=server_name, api_version=api_version)
 

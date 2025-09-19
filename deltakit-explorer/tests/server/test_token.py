@@ -1,6 +1,7 @@
 # (c) Copyright Riverlane 2020-2025.
 
 import os
+import deltakit_core.api.constants
 import pytest
 import random
 from pathlib import Path
@@ -16,25 +17,25 @@ class TestGQLClientTokenManipulations:
 
     @pytest.mark.parametrize("api_version", [1, 2])
     def test_set_token_raises_on_connection(self, api_version, mocker):
-        old_server = os.environ.pop(utils.DELTAKIT_SERVER_URL_ENV, default="")
+        old_server = os.environ.pop(deltakit_core.api.constants.DELTAKIT_SERVER_URL_ENV, default="")
         client = Client("http://localhorse:81/", api_version=api_version)
         mocker.patch(
             "deltakit_explorer._api._client.Client.get_instance",
             return_value=client,
         )
-        os.environ[utils.DELTAKIT_SERVER_URL_ENV] = "http://localhorse:81/"
+        os.environ[deltakit_core.api.constants.DELTAKIT_SERVER_URL_ENV] = "http://localhorse:81/"
         with pytest.raises(ServerException, match="^Could not validate token"):
             Client.set_token("abc", validate=True)
         if old_server:
-            os.environ[utils.DELTAKIT_SERVER_URL_ENV] = old_server
+            os.environ[deltakit_core.api.constants.DELTAKIT_SERVER_URL_ENV] = old_server
 
     def test_set_token_raises_on_server_v1_error(self):
-        old_server = os.environ.pop(utils.DELTAKIT_SERVER_URL_ENV, default="")
-        os.environ[utils.DELTAKIT_SERVER_URL_ENV] = "https://riverlane.com/"
+        old_server = os.environ.pop(deltakit_core.api.constants.DELTAKIT_SERVER_URL_ENV, default="")
+        os.environ[deltakit_core.api.constants.DELTAKIT_SERVER_URL_ENV] = "https://riverlane.com/"
         with pytest.raises(ServerException, match="^Token failed validation: Status 403"):
             GQLClient("https://riverlane.com/").set_token("abc", validate=True)
         if old_server:
-            os.environ[utils.DELTAKIT_SERVER_URL_ENV] = old_server
+            os.environ[deltakit_core.api.constants.DELTAKIT_SERVER_URL_ENV] = old_server
 
     @pytest.mark.parametrize("api_version", [1, 2])
     def test_set_token_works(self, api_version, mocker):

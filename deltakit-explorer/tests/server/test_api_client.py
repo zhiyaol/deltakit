@@ -5,13 +5,13 @@ import os
 from pathlib import Path
 from typing import ClassVar
 
+from deltakit_core.api.constants import DELTAKIT_SERVER_URL_ENV
 import numpy as np
 import pytest
 import requests
 from deltakit_circuit.gates import PauliBasis
 from deltakit_explorer import Client
-from deltakit_explorer._utils._utils import (DELTAKIT_SERVER_DEFAULT_URL_ENV,
-                                             DELTAKIT_SERVER_URL_ENV)
+from deltakit_core.api.constants import (DELTAKIT_SERVER_DEFAULT_URL_ENV)
 from deltakit_core.api.enums import (DataFormat, DecoderType, QECECodeType,
                                      QECExperimentType)
 from deltakit_core.types import (CircuitParameters, DataString, Decoder,

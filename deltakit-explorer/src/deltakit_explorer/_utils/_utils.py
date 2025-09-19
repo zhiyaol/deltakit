@@ -9,11 +9,7 @@ import os
 import sys
 from pathlib import Path
 
-APP_NAME = "deltakit-explorer"
-DELTAKIT_SERVER_URL_ENV = "DELTAKIT_SERVER"
-DELTAKIT_SERVER_DEFAULT_URL_ENV = "https://deltakit.riverlane.com/proxy"
-HTTP_PACKET_LIMIT = 20_000_000
-
+from deltakit_core.api.constants import APP_NAME
 
 def get_log_directory() -> Path:
     """

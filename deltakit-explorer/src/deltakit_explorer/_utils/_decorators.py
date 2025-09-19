@@ -12,7 +12,7 @@ from typing import Any
 import stim
 import tqdm
 from deltakit_explorer._utils._logging import Logging
-from deltakit_explorer._utils._utils import HTTP_PACKET_LIMIT
+from deltakit_core.api.constants import HTTP_PACKET_LIMIT
 from deltakit_explorer.data._data_analysis import \
     get_decoding_request_size_estimate as get_dec_request_size
 from deltakit_explorer.data._data_analysis import \

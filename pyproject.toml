@@ -173,7 +173,7 @@ omit = [
 ignore = ["DEP003"]
 
 [tool.deptry.per_rule_ignores]
-DEP001 = ["tests", "examples/notebooks/visualization/snippet.py"]
+DEP001 = ["tests", "snippet"]
 DEP002 = ['deltakit', 'deltakit_explorer', 'deltakit_circuit', 'deltakit_core', 'deltakit_decode',
           'pytest-cov', 'pytest-asyncio', 'pytest-skip-slow', 'pytest-testmon',
           'mypy', 'ruff', 'isort',

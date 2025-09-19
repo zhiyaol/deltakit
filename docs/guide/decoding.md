@@ -22,7 +22,7 @@ In this guide, you will learn how to run a decoder on measurement results from a
 3. Run the decoder on the detector measurements,
    and compare the results to the experimental outcomes.
 
-Additionally, on this page, you will find information about decoder tuning.
+Additionally, on this page, you'll learn how to tune your decoder parameters to improve its performance.
 
 ## Getting detector and observable results
 

@@ -59,7 +59,6 @@ from deltakit_circuit import Coord2D
 from deltakit_explorer.codes import css_code_memory_circuit, RepetitionCode, RotatedPlanarCode
 from deltakit_circuit.gates import PauliBasis
 
-
 rep_code = RepetitionCode(distance=3, stabiliser_type=PauliBasis.Z)
 circuit = css_code_memory_circuit(
     css_code=rep_code,
@@ -85,7 +84,6 @@ In this example we will create a noiseless QPU with exactly the needed number of
 from deltakit_circuit import gates
 from deltakit_decode.noise_sources import StimNoise
 from deltakit_explorer.qpu import QPU, NativeGateSetAndTimes, ToyNoise, NoiseParameters
-
 
 qpu_instance = QPU(
     qubits=circuit.qubits,  # only qubits we need are defined

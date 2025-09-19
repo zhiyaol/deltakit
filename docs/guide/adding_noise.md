@@ -21,21 +21,18 @@ The whole idea of QEC only makes sense if qubits are not perfect.
 Decoders try to make logical qubits robust against errors,
 but in order for them to do a good job we have to inform them which errors they should expect.
 
-While exploring QEC codes or designing a new decoder,
-you should be able to validate it on real data.
-In the best case, you may run an experiment on a real QPU.
-But even if you have access to a QPU, it typically spends
-more time calibrating than doing computation.
-That is why you are interested in realistic QEC simulation.
+Whether you are exploring error-correcting codes or designing a new decoder,
+it's important to have realistic data to validate them.
+You can obtain those data from a real QPU, however, this might be expensive or time consuming, due to requiring calibration. This is where realistic QEC simulation comes in.
 
 The physics of noise in quantum systems is complicated and
 differs between qubit architectures.
-Superconducting systems don't typically lose their qubits,
+For example, superconducting systems don't typically lose their qubits,
 while neutral atom ones can.
 Cross-talk, on the other hand, is specific to
 superconducting QPUs.
 Shuttling noise is something you would observe in ion trap devices,
-but cannot even define in superconducting systems,
+but cannot even be defined in superconducting systems,
 and so on.
 
 Each noise source has its own theory, and you may try to model it quite accurately.
@@ -48,7 +45,7 @@ so you may have to sacrifice model accuracy for simulation speed.
 
 ## Practical solution
 
-The `Stim` library offers tools for both quick simulation (thanks to its limitation to Clifford gates)
+The [Stim](https://github.com/quantumlib/Stim) library offers tools for both quick simulation (thanks to its limitation to Clifford gates)
 and a reasonably rich palette of error mechanisms,
 which may be used to approximate different types of noise.
 Deltakit benefits from both Stim's simulation and error implementation approaches.
@@ -73,7 +70,7 @@ It defines a uniform way of adding Stim noise channels to the circuit.
 
 ## `ToyNoise`
 
-The {class}`ToyNoise <deltakit.explorer.qpu.ToyNoise>` noise model
+The {class}`ToyNoise <deltakit.explorer.qpu.ToyNoise>` is a simple toy model for noise that
 has only two parameters.
 One parameter, `p`, gives the two-qubit operation error rate,
 which is assumed to be the dominant error.

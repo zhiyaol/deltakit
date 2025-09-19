@@ -20,7 +20,7 @@ from deltakit_explorer._api._api_client import APIClient
 from deltakit_explorer._api._auth import (get_token,
                                           https_verification_disabled,
                                           set_token)
-from deltakit_explorer._utils._logging import Logging
+from deltakit_core.api._logging import Logging
 from deltakit_core.api.enums import DataFormat, APIEndpoints
 from deltakit_core.types import (DataString, Decoder, DecodingResult,
                                      DetectionEvents, LeakageFlags, Measurements,

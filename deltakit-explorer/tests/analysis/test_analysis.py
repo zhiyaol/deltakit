@@ -90,7 +90,7 @@ class TestCalculateLambda:
             )
 
     def test_calculate_lambda_warns(self, mocker):
-        mocker.patch("deltakit_explorer._utils._logging.Logging.warn")
+        mocker.patch("deltakit_core.api._logging.Logging.warn")
         distances = [2, 3, 4]
         lep = [0.000996, 0.000302, 0.000302]
         lep_stddev = [2.0e-09, 6.0e-10, 6.0e-10]

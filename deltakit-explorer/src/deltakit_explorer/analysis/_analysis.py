@@ -6,7 +6,7 @@ from collections.abc import Sequence
 
 import numpy as np
 import numpy.typing as npt
-from deltakit_explorer._utils._logging import Logging
+from deltakit_core.api._logging import Logging
 
 
 def get_exp_fit(

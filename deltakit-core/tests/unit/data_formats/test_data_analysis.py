@@ -5,11 +5,16 @@ from pathlib import Path
 
 import pytest
 import stim
-from deltakit_explorer.data._data_analysis import (
+from deltakit_core.data_formats._data_analysis import (
     get_binary_data_size, get_decoding_request_size_estimate,
     get_decoding_response_size_estimate, get_simulation_response_size_estimate)
 from deltakit_core.api.enums import DataFormat
 
+
+_DELTAKIT_CORE_FOLDER = Path(__file__).parent.parent.parent.parent
+_DELTAKIT_FOLDER = _DELTAKIT_CORE_FOLDER.parent
+_DELTAKIT_EXPLORER_FOLDER = _DELTAKIT_FOLDER / "deltakit-explorer"
+_RESOURCES_PATH = _DELTAKIT_EXPLORER_FOLDER / "tests" / "resources"
 
 @pytest.mark.parametrize(
     ("width", "shots", "data_format", "expected"),
@@ -53,7 +58,7 @@ def test_binary_data_size_raises():
 def test_get_decoding_request_size_estimate(
     shots: int, data_format: DataFormat, expected: int
 ):
-    stim_file = Path(__file__).parent / "../resources/rep_code_mutated_default_noise_data.stim"
+    stim_file = _RESOURCES_PATH / "rep_code_mutated_default_noise_data.stim"
     circuit = stim.Circuit.from_file(stim_file)
     circuit_text = str(circuit)
     assert get_decoding_request_size_estimate(circuit, shots, data_format) == expected
@@ -104,7 +109,7 @@ def test_get_decoding_request_size_estimate_with_leakage(
 def test_get_decoding_response_size_estimate(
     shots: int, data_format: DataFormat, expected: int
 ):
-    stim_file = Path(__file__).parent / "../resources/rep_code_mutated_default_noise_data.stim"
+    stim_file = _RESOURCES_PATH / "rep_code_mutated_default_noise_data.stim"
     circuit = stim.Circuit.from_file(stim_file)
     circuit_text = str(circuit)
     assert get_decoding_response_size_estimate(circuit, shots, data_format) == expected
@@ -128,7 +133,7 @@ def test_get_decoding_response_size_estimate(
 def test_get_simulation_response_size_estimate(
     shots: int, data_format: DataFormat, expected: int
 ):
-    stim_file = Path(__file__).parent / "../resources/rep_code_mutated_default_noise_data.stim"
+    stim_file = _RESOURCES_PATH / "rep_code_mutated_default_noise_data.stim"
     circuit = stim.Circuit.from_file(stim_file)
     circuit_text = str(circuit)
     assert (

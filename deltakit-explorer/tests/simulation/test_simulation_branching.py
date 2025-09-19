@@ -6,7 +6,7 @@ from deltakit_explorer import simulation
 from deltakit_explorer._api._client import Client
 from deltakit_explorer._utils._decorators import (
     _split_into_batches, validate_and_split_simulation)
-from deltakit_explorer.data._data_analysis import has_leakage
+from deltakit_core.data_formats._data_analysis import has_leakage
 from deltakit_core.types import LeakageFlags, Measurements
 
 

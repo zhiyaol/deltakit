@@ -21,7 +21,7 @@ from deltakit_explorer._utils._decorators import (
     validate_and_split_decoding, validate_and_split_simulation,
     validate_generation)
 from deltakit_core.api._logging import Logging
-from deltakit_explorer.data._data_analysis import has_leakage
+from deltakit_core.data_formats._data_analysis import has_leakage
 from deltakit_core.types._experiment_types import (QECExperiment,
                                                        QECExperimentDefinition)
 from deltakit_core.types._types import (BinaryDataType, Decoder,

@@ -13,13 +13,13 @@ import stim
 import tqdm
 from deltakit_core.api._logging import Logging
 from deltakit_core.api.constants import HTTP_PACKET_LIMIT
-from deltakit_explorer.data._data_analysis import \
+from deltakit_core.data_formats._data_analysis import \
     get_decoding_request_size_estimate as get_dec_request_size
-from deltakit_explorer.data._data_analysis import \
+from deltakit_core.data_formats._data_analysis import \
     get_decoding_response_size_estimate as get_dec_size
-from deltakit_explorer.data._data_analysis import \
+from deltakit_core.data_formats._data_analysis import \
     get_simulation_response_size_estimate as get_sim_size
-from deltakit_explorer.data._data_analysis import has_leakage
+from deltakit_core.data_formats._data_analysis import has_leakage
 from deltakit_core.api.enums import (DataFormat, DecoderType,
                                                 QECECodeType)
 from deltakit_core.types._exceptions import ServerException

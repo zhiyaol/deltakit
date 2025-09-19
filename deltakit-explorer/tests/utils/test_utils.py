@@ -7,7 +7,7 @@ from pathlib import Path
 from unittest import mock
 
 import pytest
-from deltakit_explorer._utils._utils import get_log_directory
+from deltakit_core.api.paths import get_log_directory
 from deltakit_explorer._utils import _utils
 
 

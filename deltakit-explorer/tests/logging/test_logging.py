@@ -9,7 +9,7 @@ import pytest
 from deltakit_explorer import Client
 from deltakit_explorer._api import _auth
 from deltakit_explorer._utils._logging import LOG_FILENAME, Logging
-from deltakit_explorer._utils._utils import get_log_directory
+from deltakit_core.api.paths import get_log_directory
 from deltakit_core.types import QECExperimentDefinition
 
 

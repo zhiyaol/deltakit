@@ -16,7 +16,7 @@ import logging.handlers
 import uuid
 from typing import Any
 
-from deltakit_explorer._utils._utils import get_log_directory
+from deltakit_core.api.paths import get_log_directory
 
 LOG_FILENAME = get_log_directory() / "client.log"
 LOG_FORMAT = "[%(asctime)s.%(msecs)03d][%(name)s][%(levelname)s] %(message)s"

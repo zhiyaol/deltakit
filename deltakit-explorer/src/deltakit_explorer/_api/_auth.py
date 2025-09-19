@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import os
 
+import deltakit_core.api.paths
 from deltakit_explorer._utils import _utils as utils
 
 TOKEN_VARIABLE = "DELTAKIT_TOKEN"  # nosec B105
@@ -28,7 +29,7 @@ def get_token() -> str:
     utils.load_environment_variables_from_drive()
     token = os.environ.get(TOKEN_VARIABLE)
     if token is None:
-        file = utils.get_config_file_path()
+        file = deltakit_core.api.paths.get_config_file_path()
         msg = (
             f"Token could not be found neither in ({file}) "
             f"nor environment variable ({TOKEN_VARIABLE}). "
@@ -51,7 +52,7 @@ def set_token(token: str):
     """
     update_dict = {TOKEN_VARIABLE: token}
     utils.set_variables(update_dict, True)
-    utils.merge_variables(update_dict, utils.get_config_file_path())
+    utils.merge_variables(update_dict, deltakit_core.api.paths.get_config_file_path())
 
 
 def https_verification_disabled() -> bool:

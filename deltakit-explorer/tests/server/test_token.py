@@ -9,7 +9,7 @@ from tests.helpers.utils import FakeResponse
 from deltakit_explorer._api import _auth
 from deltakit_explorer._api._client import Client
 from deltakit_explorer._api._gql_client import GQLClient
-from deltakit_explorer._utils import _utils as utils
+from deltakit_core.api import paths as utils
 from deltakit_core.types._exceptions import ServerException
 
 

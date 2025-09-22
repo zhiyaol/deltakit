@@ -11,7 +11,7 @@ import pytest
 import requests
 from deltakit_core.api.client._client import Client
 from deltakit_core.api.client._gql_client import GQLClient
-from deltakit_core.types._exceptions import ServerException
+from deltakit_core.types._exceptions import ServerError
 
 
 # This tests GQLClient, which is the underlying client for v1 of the API.
@@ -28,7 +28,7 @@ class TestGQLClient:
         )
         Client.set_token("123", validate=False)
         client = Client("http://localhost/", api_version=1)
-        with pytest.raises(ServerException, match="some message"):
+        with pytest.raises(ServerError, match="some message"):
             client._api.execute_query("mutation Copy { copy {location, uid}}", {}, "")
         gql.client.SyncClientSession.execute.assert_called_once()
 
@@ -46,7 +46,7 @@ class TestGQLClient:
 
         client = Client("http://localhost/", api_version=1)
         Client.set_token("123", validate=False)
-        with pytest.raises(ServerException, match="some message"):
+        with pytest.raises(ServerError, match="some message"):
             client._api.execute_query("mutation Copy { copy {location, uid}}", {}, "")
         gql.client.SyncClientSession.execute.assert_called_once()
 
@@ -89,7 +89,7 @@ class TestGQLClient:
         resp._content = response_text
         mocker.patch("requests.Session.get", return_value=resp)
         client = Client("http://localhost/", api_version=1)
-        with pytest.raises(ServerException, match=re.escape(message)):
+        with pytest.raises(ServerError, match=re.escape(message)):
             client._api._get_query("123", "")
         requests.Session.get.assert_called_once()
 

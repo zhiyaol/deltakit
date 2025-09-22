@@ -108,11 +108,15 @@ class APIClient(ABC):  # pragma: nocover
             request_id (str): Identifier of the request.
 
         Returns:
-            tuple[Measurements, LeakageFlags | None]: Tuple containing measurements and optional leakage flags."""
+            tuple[Measurements, LeakageFlags | None]:
+                Tuple containing measurements and optional leakage flags.
+        """
         raise NotImplementedError()
 
     @abstractmethod
-    def add_noise(self, stim_circuit: str | stim.Circuit, noise_model: NoiseModel, request_id: str) -> str:
+    def add_noise(
+        self, stim_circuit: str | stim.Circuit, noise_model: NoiseModel, request_id: str
+    ) -> str:
         """Add noise to a circuit based on the provided noise model.
 
         Args:
@@ -121,7 +125,9 @@ class APIClient(ABC):  # pragma: nocover
             request_id (str): Identifier of the request.
 
         Returns:
-            str: Noisy circuit in stim format. May contain leakage (not stim-compatible), if SI1000NoiseModel is used."""
+            str: Noisy circuit in stim format. May contain leakage (not
+                stim-compatible), if SI1000NoiseModel is used.
+        """
         raise NotImplementedError()
 
     @abstractmethod
@@ -181,12 +187,14 @@ class APIClient(ABC):  # pragma: nocover
         Args:
             detectors (DetectionEvents): Detector data to analyze.
             noise_floor_circuit (str | stim.Circuit): Circuit with the minimal noise.
-            use_default_noise_model_edges (bool): Whether to use default noise model edges.
+            use_default_noise_model_edges (bool): Whether to use default noise model
+                edges.
             request_id (str): Identifier of the request.
 
         Returns:
             tuple[npt.NDArray[np.float64], QubitCoordinateToDetectorMapping]:
-                Tuple containing the correlation matrix and a mapping of qubit coordinates to detectors.
+                Tuple containing the correlation matrix and a mapping of qubit
+                coordinates to detectors.
         """
         raise NotImplementedError()
 
@@ -197,7 +205,8 @@ class APIClient(ABC):  # pragma: nocover
         detectors: DetectionEvents,
         request_id: str
     ) -> tuple[str, DetectionEvents]:
-        """Trim a circuit and detectors to remove qubits and detectors irrelevant to decoding problem.
+        """Trim a circuit and detectors to remove qubits and detectors irrelevant to
+        decoding problem.
 
         Args:
             stim_circuit (str | stim.Circuit): Circuit to trim.
@@ -205,6 +214,7 @@ class APIClient(ABC):  # pragma: nocover
             request_id (str): Identifier of the request.
 
         Returns:
-            tuple[str, DetectionEvents]: Tuple containing the trimmed circuit in stim format and the trimmed detectors
+            tuple[str, DetectionEvents]: Tuple containing the trimmed circuit in stim
+                format and the trimmed detectors
         """
         raise NotImplementedError()

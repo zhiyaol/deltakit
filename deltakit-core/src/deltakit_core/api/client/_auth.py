@@ -52,7 +52,9 @@ def set_token(token: str):
     """
     update_dict = {TOKEN_VARIABLE: token}
     deltakit_core.api.environment.set_variables(update_dict, True)
-    deltakit_core.api.environment.merge_variables(update_dict, deltakit_core.api.paths.get_config_file_path())
+    deltakit_core.api.environment.merge_variables(
+        update_dict, deltakit_core.api.paths.get_config_file_path()
+    )
 
 
 def https_verification_disabled() -> bool:

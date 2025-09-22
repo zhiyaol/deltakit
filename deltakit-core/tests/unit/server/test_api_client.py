@@ -62,13 +62,13 @@ class TestClient:
                     {
                         "shots": 0, "fails": 1,
                         "times": [0.4], "counts": [1],
-                        "predictionsFile": None,
+                        "predictions_file": None,
                     }
                 },
                 DecodingResult(
                     fails=1, shots=0,
                     times=[0.4], counts=[1],
-                    predictionsFile=None,
+                    predictions_file=None,
                 )
             ),
             (
@@ -85,13 +85,13 @@ class TestClient:
                     {
                         "shots": 0, "fails": 1,
                         "times": [0.4], "counts": [1],
-                        "predictionsFile": None,
+                        "predictions_file": None,
                     }
                 },
                 DecodingResult(
                     fails=1, shots=0,
                     times=[0.4], counts=[1],
-                    predictionsFile=None,
+                    predictions_file=None,
                 )
             ),
             (
@@ -321,7 +321,7 @@ class TestClient:
             return_value={
                 "decode":
                 {"shots": 1, "fails": 0, "times": [],
-                 "counts": [1], "predictionsFile": None}
+                 "counts": [1], "predictions_file": None}
             }
         )
         circuit = (

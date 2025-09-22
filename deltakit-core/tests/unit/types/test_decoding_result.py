@@ -14,7 +14,7 @@ def test_constructor_from_json(pred):
         "shots": 1000,
         "times": [0.4, 0.3, 12.4],
         "counts": [333, 333, 334],
-        "predictionsFile": pred,
+        "predictions_file": pred,
     }
     res = DecodingResult(**json)
     assert sum(res.counts) == res.shots
@@ -46,7 +46,7 @@ def test_get_predictions_none():
             shots=10,
             times=[],
             counts=[],
-            predictionsFile=None,
+            predictions_file=None,
         ).predictions
         is None
     )
@@ -59,7 +59,7 @@ def test_get_predictions_none_uid():
             shots=10,
             times=[],
             counts=[],
-            predictionsFile={"uid": None},
+            predictions_file={"uid": None},
         ).predictions
         is None
     )
@@ -73,7 +73,7 @@ def test_get_predictions_good_data():
             times=[],
             counts=[],
             predictions_format=DataFormat.F01,
-            predictionsFile={"uid": str(DataString("0101\n1010"))},
+            predictions_file={"uid": str(DataString("0101\n1010"))},
         ).predictions.as_01_string()
         == "0101\n1010"
     )
@@ -87,7 +87,7 @@ def test_get_predictions_fail_to_parse():
             times=[],
             counts=[],
             predictions_format=DataFormat.F01,
-            predictionsFile={"uid": "duck://0201"},
+            predictions_file={"uid": "duck://0201"},
         ).predictions.as_numpy()
 
 
@@ -135,11 +135,11 @@ def test_decoding_result_eq():
     res1 = DecodingResult(
         0, 1, [0., 1., 2.], 2,
         predictions_format=DataFormat.F01,
-        predictionsFile={"uid": "duck://30300a30310a"}
+        predictions_file={"uid": "duck://30300a30310a"}
     )
     res2 = DecodingResult(
         0, 1, [0., 3., 7.], 2,
         predictions_format=DataFormat.CSV,
-        predictionsFile={"uid": "duck://302c300a302c310a"}
+        predictions_file={"uid": "duck://302c300a302c310a"}
     )
     assert res1 == res2

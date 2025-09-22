@@ -31,9 +31,9 @@ def test_validate_generation_warns(mocker):
 def test_validate_and_split_decoding_negative(mocker):
     @validate_and_split_decoding
     def dummy(obj, dets, obs, decoder, circuit, leakage=None):
-        raise Exception("fail")
+        raise NotImplementedError("fail")
     dets = DetectionEvents(np.ones((10, 2)), "B8", 2)
     obs = ObservableFlips(np.ones((10, 2)), "B8", 2)
     decoder = Decoder(DecoderType.MWPM)
-    with pytest.raises(Exception):
+    with pytest.raises(NotImplementedError):
         dummy(None, dets, obs, decoder, "CIRCUIT")

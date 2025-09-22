@@ -22,7 +22,7 @@ from deltakit_core.data_formats._data_analysis import \
 from deltakit_core.data_formats._data_analysis import has_leakage
 from deltakit_core.api.enums import (DataFormat, DecoderType,
                                                 QECECodeType)
-from deltakit_core.types._exceptions import ServerException
+from deltakit_core.types._exceptions import ServerError
 from deltakit_core.types._experiment_types import QECExperimentDefinition
 from deltakit_core.types._types import (CircuitParameters, Decoder,
                                             DecodingResult, DetectionEvents,
@@ -206,7 +206,7 @@ def validate_and_split_simulation(func):
                 "Some of batches returned leakage information, "
                 "and some did not. Data is inconsistent."
             )
-            raise ServerException(
+            raise ServerError(
                 msg
             )
         final_measurements = Measurements.combine(measurements)

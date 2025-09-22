@@ -5,7 +5,7 @@ from tests.helpers.utils import FakeResponse
 from deltakit_core.api.enums import APIEndpoints
 from deltakit_core.api.client._api_v2_client import APIv2Client, Job, JobStatus
 from deltakit_core.api.enums import DecoderType
-from deltakit_core.types._exceptions import ServerException
+from deltakit_core.types._exceptions import ServerError
 from deltakit_core.types._experiment_types import QECExperimentDefinition
 from deltakit_core.types._types import (Decoder, DetectionEvents, ObservableFlips,
                                             PhysicalNoiseModel,
@@ -64,7 +64,7 @@ class TestExecute:
         )
         mocker.patch.object(client, "_submit_task", return_value=job)
         mocker.patch.object(client, "_get_job_status", return_value=job)
-        with pytest.raises(ServerException, match="fail"):
+        with pytest.raises(ServerError, match="fail"):
             client.execute(APIEndpoints.GENERATE_CIRCUIT, {}, "id")
 
 
@@ -186,7 +186,7 @@ class TestAPICalls:
         mocker.patch.object(
             client._request_session, "get", return_value=FakeResponse(403)
         )
-        with pytest.raises(ServerException, match=r"\[403\] BODY text"):
+        with pytest.raises(ServerError, match=r"\[403\] BODY text"):
             client._get_job_status("123")
 
 

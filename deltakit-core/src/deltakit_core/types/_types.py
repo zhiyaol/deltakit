@@ -77,8 +77,10 @@ class MatrixSpecifications(JSONable):
 
     param_l: int
     param_m: int
-    m_A_powers: list[int]
-    m_B_powers: list[int]
+    # Ignoring snake_case requirement here as having matrices in upper-case is standard
+    # and less confusing.
+    m_A_powers: list[int]  # noqa: N815
+    m_B_powers: list[int]  # noqa: N815
 
     def to_gql(self):
         """Get a dictionary for the current object"""
@@ -152,7 +154,9 @@ class CircuitParameters(JSONable):
 
     @staticmethod
     def from_matrix_specification(
-        param_l: int, param_m: int, m_A_powers: list[int], m_B_powers: list[int]
+        # Ignoring snake_case requirement here as having matrices in upper-case is
+        # standard and less confusing.
+        param_l: int, param_m: int, m_A_powers: list[int], m_B_powers: list[int]  # noqa: N803
     ) -> CircuitParameters:
         """Use with Bivariate Bicycle codes.
 
@@ -652,21 +656,23 @@ class Measurements(BinaryDataType):
         lines = circuit.splitlines()
         result_lines = []
         for line in lines:
-            if line.strip() == "":
+            stripped_line = line.strip()
+            if stripped_line == "":
                 continue
             if "HERALD_LEAKAGE_EVENT" in line:
-                herald_gap = len(line.strip().split()) - 1
+                herald_gap = len(stripped_line.split()) - 1
                 bits.extend([None] * herald_gap)
                 continue
             # measurement happened, adding new bits
-            if line.strip()[0] == "M":
-                measurements = len(line.strip().split()) - 1
+            if stripped_line[0] == "M":
+                measurements = len(stripped_line.split()) - 1
                 bits.extend(
                     range(measurement_bits_count, measurement_bits_count + measurements)
                 )
                 measurement_bits_count += measurements
             # detector/observable, update indices or skip if refers to leakage
-            if ("DETECTOR" in line) or ("OBSERVABLE_INCLUDE" in line):
+            modified_line = line
+            if ("DETECTOR" in modified_line) or ("OBSERVABLE_INCLUDE" in modified_line):
                 skip_me = False
                 # absolute values may become smaller, we should not re-remap!
                 bits_from_latest_to_earliest = list(enumerate(bits))[::-1]
@@ -675,7 +681,7 @@ class Measurements(BinaryDataType):
                     neg_i = i - len(bits)
                     # this was a heralded leakage
                     if new_i is None:
-                        if f"rec[{neg_i}]" in line:
+                        if f"rec[{neg_i}]" in modified_line:
                             # this line addresses leakage heralding
                             # we remove it
                             skip_me = True
@@ -684,12 +690,14 @@ class Measurements(BinaryDataType):
                         continue
                     # new relative indexing
                     neg_new_i = new_i - measurement_bits_count
-                    line = line.replace(f"rec[{neg_i}]", f"rec[{neg_new_i}]")
+                    modified_line = modified_line.replace(
+                        f"rec[{neg_i}]", f"rec[{neg_new_i}]"
+                    )
                 if skip_me:
                     continue
-            if ("RELAX" in line) or ("LEAKAGE" in line):
+            if ("RELAX" in modified_line) or ("LEAKAGE" in modified_line):
                 continue
-            result_lines.append(line)
+            result_lines.append(modified_line)
 
         return "\n".join(result_lines)
 
@@ -898,7 +906,7 @@ class DecodingResult:
         times: list[float],
         counts: list[int],
         predictions_format: DataFormat = DataFormat.F01,
-        predictionsFile: dict[str, str | None] | None = None,
+        predictions_file: dict[str, str | None] | None = None,
     ):
         """
         Args:
@@ -907,7 +915,7 @@ class DecodingResult:
             times (List[float]): CPU time for decoding workers
             counts (List[int]): number of shots each worker processed
             predictions_format (DataFormat): format of predictions
-            predictionsFile (Optional[Dict[str, Optional[str]]]):
+            predictions_file (Optional[Dict[str, Optional[str]]]):
                 definition of filename or datastring with decoding predictions.
         """
         self.fails = fails
@@ -915,7 +923,7 @@ class DecodingResult:
         self.times = times
         self.counts = counts
         self.predictions_format = predictions_format
-        self.predictions_file = predictionsFile
+        self.predictions_file = predictions_file
         if self.predictions_file is not None:
             string = self.predictions_file.get("uid")
             if string is None:

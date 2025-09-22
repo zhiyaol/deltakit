@@ -90,7 +90,7 @@ class TestCloudDecoder:
         client = Client("http://localhost")
         result = DecodingResult(
             # some 01-compatible string
-            predictionsFile={"uid": "duck://310a300a"},
+            predictions_file={"uid": "duck://310a300a"},
             fails=1,
             shots=2,
             times=[],
@@ -111,7 +111,7 @@ class TestCloudDecoder:
         client = Client("http://localhost")
         result = DecodingResult(
             # some 01-compatible string
-            predictionsFile={"uid": "duck://310a300a"},
+            predictions_file={"uid": "duck://310a300a"},
             fails=1,
             shots=1000,
             times=[],

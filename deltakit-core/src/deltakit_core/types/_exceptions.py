@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 
-class ServerException(Exception):  # pragma: nocover
+class ServerError(Exception):  # pragma: nocover
     """Exception, which happened on a server side."""
 
     message: str

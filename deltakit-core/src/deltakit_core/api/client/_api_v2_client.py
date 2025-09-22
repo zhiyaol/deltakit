@@ -19,7 +19,7 @@ from deltakit_core.api.client._auth import (get_token,
                                           set_token)
 from deltakit_core.api._logging import Logging
 from deltakit_core.api.enums import DataFormat
-from deltakit_core.types._exceptions import ServerException
+from deltakit_core.types._exceptions import ServerError
 from deltakit_core.types._experiment_types import QECExperimentDefinition
 from deltakit_core.types._types import (BinaryDataType, DataString,
                                         Decoder, DecodingResult, DetectionEvents,
@@ -51,7 +51,7 @@ class Job:
 
     def raise_on_error(self):
         if self.error is not None:
-            raise ServerException(self.error)
+            raise ServerError(self.error)
 
 
 class APIv2Client(APIClient):
@@ -122,7 +122,9 @@ class APIv2Client(APIClient):
         if resp.ok:
             return Job(**resp.json())
         else:
-            raise ServerException(f"[{resp.status_code}] Job not submitted: {resp.text}")
+            raise ServerError(
+                f"[{resp.status_code}] Job not submitted: {resp.text}"
+            )
 
     def _get_job_status(self, request_id: str) -> Job:
         headers = self.auth_headers.copy()
@@ -136,7 +138,7 @@ class APIv2Client(APIClient):
         if resp.status_code == 404:
             raise KeyError(f"Request {request_id} not found.")
         if not resp.ok:
-            raise ServerException(f"[{resp.status_code}] {resp.text}")
+            raise ServerError(f"[{resp.status_code}] {resp.text}")
         return Job(**resp.json())
 
     @override
@@ -164,16 +166,16 @@ class APIv2Client(APIClient):
             except KeyError:
                 # request is validated, even the key is missing
                 pass
-            except ServerException as exc:
+            except ServerError as exc:
                 Logging.error(exc, "set_token")
                 set_token(old_token)
                 msg = f"Token failed validation: {exc.message}."
-                raise ServerException(msg) from exc
+                raise ServerError(msg) from exc
             except requests.exceptions.ConnectionError as exc_coonection:
                 message = "Could not validate token: cannot reach client."
                 set_token(old_token)
                 Logging.error(exc_coonection, "set_token")
-                raise ServerException(message) from exc_coonection
+                raise ServerError(message) from exc_coonection
         msg = (
             "Token successfully validated and "
             "will be used automatically in future sessions."
@@ -219,7 +221,9 @@ class APIv2Client(APIClient):
         return 0
 
     @override
-    def generate_circuit(self, experiment_definition: QECExperimentDefinition, request_id: str) -> str:
+    def generate_circuit(
+        self, experiment_definition: QECExperimentDefinition, request_id: str
+    ) -> str:
         result = self.execute(
             query_name=APIEndpoints.GENERATE_CIRCUIT,
             variable_values=experiment_definition.to_json(),
@@ -228,7 +232,9 @@ class APIv2Client(APIClient):
         return DataString.from_data_string(str(result.get("circuit"))).to_string()
 
     @override
-    def simulate_circuit(self, stim_circuit: str | stim.Circuit, shots: int, request_id: str) -> tuple[Measurements, LeakageFlags | None]:
+    def simulate_circuit(
+        self, stim_circuit: str | stim.Circuit, shots: int, request_id: str
+    ) -> tuple[Measurements, LeakageFlags | None]:
         result = self.execute(
             query_name=APIEndpoints.SIMULATE_CIRCUIT,
             variable_values={
@@ -250,9 +256,13 @@ class APIv2Client(APIClient):
         return mmts, leakage
 
     @override
-    def add_noise(self, stim_circuit: str | stim.Circuit, noise_model: NoiseModel, request_id: str) -> str:
+    def add_noise(
+        self, stim_circuit: str | stim.Circuit, noise_model: NoiseModel, request_id: str
+    ) -> str:
         if noise_model.ENDPOINT is None:
-            raise NotImplementedError(f"Noise addition for {type(noise_model)} is not implemented.")
+            raise NotImplementedError(
+                f"Noise addition for {type(noise_model)} is not implemented."
+            )
         result = self.execute(
             query_name=noise_model.ENDPOINT,
             variable_values={
@@ -273,14 +283,22 @@ class APIv2Client(APIClient):
         leakage_flags: LeakageFlags | None,
         request_id: str,
     ) -> DecodingResult:
-        query_name = APIEndpoints.DECODE if leakage_flags is None else APIEndpoints.DECODE_LEAKAGE
+        query_name = (
+            APIEndpoints.DECODE
+            if leakage_flags is None
+            else APIEndpoints.DECODE_LEAKAGE
+        )
         job_result = self.execute(
             query_name=query_name,
             variable_values={
                 "circuit": str(DataString(str(noisy_stim_circuit))),
                 "detectors": detectors.as_data_string(DataFormat.B8),
                 "observables": observables.as_data_string(DataFormat.B8),
-                "leakage_flags": leakage_flags.as_data_string(DataFormat.B8) if leakage_flags else None,
+                "leakage_flags": (
+                    leakage_flags.as_data_string(DataFormat.B8)
+                    if leakage_flags
+                    else None
+                ),
                 "decoder_type": decoder.decoder_type.value,
                 "decoder_parameters": decoder.parameters,
                 "decoder_jobs": decoder.parallel_jobs,
@@ -339,7 +357,8 @@ class APIv2Client(APIClient):
         matrix = result.get("correlation_matrix")
         qubit_to_detectors = cast(list, result.get("mapping", []))
         mapping = QubitCoordinateToDetectorMapping({
-            tuple(qubit_det["qubit"]): qubit_det["detectors"] for qubit_det in qubit_to_detectors
+            tuple(qubit_det["qubit"]): qubit_det["detectors"]
+            for qubit_det in qubit_to_detectors
         })
         return np.array(matrix, dtype=np.float64), mapping
 
@@ -361,5 +380,7 @@ class APIv2Client(APIClient):
         )
         circuit = str(result.get("circuit"))
         dets_datastring = str(result.get("detectors"))
-        detectors = DetectionEvents(DataString.from_data_string(dets_datastring), DataFormat.F01)
+        detectors = DetectionEvents(
+            DataString.from_data_string(dets_datastring), DataFormat.F01
+        )
         return DataString.from_data_string(circuit).to_string(), detectors

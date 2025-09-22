@@ -26,7 +26,7 @@ from deltakit_core.types import (DataString, Decoder, DecodingResult,
                                      DetectionEvents, LeakageFlags, Measurements,
                                      NoiseModel, ObservableFlips,
                                      QubitCoordinateToDetectorMapping)
-from deltakit_core.types._exceptions import ServerException
+from deltakit_core.types._exceptions import ServerError
 from deltakit_core.types._experiment_types import QECExperimentDefinition
 from gql import Client, gql
 from gql.client import SyncClientSession
@@ -163,7 +163,7 @@ class GQLClient(APIClient):
             if len(gateway_message) > 160:
                 gateway_message = gateway_message[:160] + "..."
             msg = f"Status {resp.status_code} (Error #{error_code}): {gateway_message}"
-            raise ServerException(
+            raise ServerError(
                 msg
             )
         return resp.text
@@ -189,12 +189,12 @@ class GQLClient(APIClient):
         try:
             result = self._session.execute(request, variable_values=variable_values)
             if isinstance(result, ExecutionResult) and result.errors:
-                raise ServerException(str(result.errors[0].message))
+                raise ServerError(str(result.errors[0].message))
             return cast(dict[str, Any], result)
         except TransportQueryError as err:
             Logging.error(err, query_id)
             message = str(err.errors[0].get("message") if err.errors else err)
-            raise ServerException(message) from err
+            raise ServerError(message) from err
         except KeyboardInterrupt:
             count = self.kill(query_id)
             Logging.warn(f"Cancelled a task, {count} worker(s) cleared.", query_id)
@@ -234,18 +234,18 @@ class GQLClient(APIClient):
             try:
                 # test a content endpoint
                 self._get_query("decode", "set_token")
-            except ServerException as exc:
+            except ServerError as exc:
                 Logging.error(exc, "set_token")
                 set_token(old_token)
                 msg = f"Token failed validation: {exc.message}."
-                raise ServerException(
+                raise ServerError(
                     msg
                 ) from exc
             except requests.exceptions.ConnectionError as exc_coonection:
                 message = "Could not validate token: cannot reach client."
                 set_token(old_token)
                 Logging.error(exc_coonection, "set_token")
-                raise ServerException(message) from exc_coonection
+                raise ServerError(message) from exc_coonection
         msg = (
             "Token successfully validated and "
             "will be used automatically in future sessions."
@@ -253,7 +253,9 @@ class GQLClient(APIClient):
         Logging.info(msg, "set_token")
 
     @override
-    def generate_circuit(self, experiment_definition: QECExperimentDefinition, request_id: str) -> str:
+    def generate_circuit(
+        self, experiment_definition: QECExperimentDefinition, request_id: str
+    ) -> str:
         result = self.execute(  # pragma: nocover
             query_name=APIEndpoints.GENERATE_CIRCUIT,
             variable_values={
@@ -274,7 +276,9 @@ class GQLClient(APIClient):
             result["generateCircuit"]["uid"]).to_string()
 
     @override
-    def simulate_circuit(self, stim_circuit: str | stim.Circuit, shots: int, request_id: str) -> tuple[Measurements, LeakageFlags | None]:
+    def simulate_circuit(
+        self, stim_circuit: str | stim.Circuit, shots: int, request_id: str
+    ) -> tuple[Measurements, LeakageFlags | None]:
         output_format = DataFormat.F01
         result = self.execute(
             query_name=APIEndpoints.SIMULATE_CIRCUIT,
@@ -303,10 +307,12 @@ class GQLClient(APIClient):
                 LeakageFlags(uids[1], data_format=output_format),
             )
         msg = f"Expected 1 or 2 result files, but got {len(uids)}"
-        raise ServerException(msg)
+        raise ServerError(msg)
 
     @override
-    def add_noise(self, stim_circuit: str | stim.Circuit, noise_model: NoiseModel, request_id: str) -> str:
+    def add_noise(
+        self, stim_circuit: str | stim.Circuit, noise_model: NoiseModel, request_id: str
+    ) -> str:
         variables = {
             "circuit": str(DataString(str(stim_circuit))),
             "result_file": DataString.empty,
@@ -315,10 +321,17 @@ class GQLClient(APIClient):
             **noise_model.__dict__,
         }
         if noise_model.ENDPOINT is None:
-            raise NotImplementedError(f"Noise addition for {type(noise_model)} is not implemented.")
+            raise NotImplementedError(
+                f"Noise addition for {type(noise_model)} is not implemented."
+            )
         result = self.execute(
-            query_name=noise_model.ENDPOINT, variable_values=variables, request_id=request_id)
-        dstring = DataString.from_data_string(result[noise_model.ENDPOINT_RESULT_FIELDNAME]["uid"])
+            query_name=noise_model.ENDPOINT,
+            variable_values=variables,
+            request_id=request_id
+        )
+        dstring = DataString.from_data_string(
+            result[noise_model.ENDPOINT_RESULT_FIELDNAME]["uid"]
+        )
         return dstring.to_string()
 
     @override
@@ -413,7 +426,8 @@ class GQLClient(APIClient):
         matrix = result["correlationMatrix"]["matrix"]
         qubit_to_detectors = result["correlationMatrix"]["qubitToDetectionEvents"]
         return np.array(matrix), QubitCoordinateToDetectorMapping({
-            tuple(qubit_det["qubit"]): qubit_det["detectors"] for qubit_det in qubit_to_detectors
+            tuple(qubit_det["qubit"]): qubit_det["detectors"]
+            for qubit_det in qubit_to_detectors
         })
 
     @override

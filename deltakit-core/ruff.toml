@@ -4,15 +4,24 @@
 extend = "../ruff.toml"
 include = ["src/deltakit_core/**/*.py", "tests/**/*.py"]
 
-# Specific per-file ignores
-[lint.per-file-ignores]
-"tests/**/*.py" = [
-    # Magic constants in tests are not an urgent issue.
+[lint]
+ignore = [
+    # Magic constants are not an urgent issue.
     # This ignore might introduce bugs if a constant changes (e.g. if "Not found"
     # becomes error 405 instead of error 404) and not all occurrences are changed
     # accordingly. That is deemed to be sufficiently improbable to still ignore this
     # error.
     "PLR2004",
+    # Too many arguments.
+    # This is something that should be addressed eventually, potentially ignoring the 
+    # rule where it makes sense. It should not be possible for this rule to hide away
+    # potential bugs as it is only about the number of arguments to functions/methods.
+    "PLR0913",
+
+]
+# Specific per-file ignores
+[lint.per-file-ignores]
+"tests/**/*.py" = [
     # Some tests have long function names which exceeds the line length limit in order 
     # to be descriptive. That is fine, so ignoring the respective errors.
     # This ignore is only about naming and so should not introduce any bug in the future
@@ -23,3 +32,16 @@ include = ["src/deltakit_core/**/*.py", "tests/**/*.py"]
 # capitalised letters. This is not an issue as most of the time this casing helps
 # with the readability.
 "tests/unit/decoding_graphs/test_parsing_dem_to_graphs.py" = ["N802", "N803"]
+
+# For the moment, dynamic __all__ generation raises a lot of issues with F401 enabled,
+# so ignore it where it happens, in __init__.py files.
+# This rule only checks for unused imports. Worst that can happen is a performance hit
+# because a unused import takes CPU time. This is not a bug per-se, but we might want
+# to periodically check import times.
+"**/__init__.py" = ["F401"]
+
+# Object does not implement `__hash__` method
+# Two classes in the following file implement __eq__ without implementing __hash__.
+# Leaving that ignored for the moment because implementing __hash__ does not seem
+# trivial. To be addressed properly later.
+"src/deltakit_core/types/_types.py" = ["PLW1641"]

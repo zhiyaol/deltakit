@@ -94,11 +94,11 @@ def get_decoding_request_size_estimate(
         width_obs = len(re.findall(r"OBSERVABLE_INCLUDE", circuit))
         width_leakage = 0
         for line in circuit.splitlines(False):
-            line = line.strip()
+            stripped_line = line.strip()
             # add all measurements and leakages
-            if line.startswith("HERALD_LEAKAGE_EVENT"):
+            if stripped_line.startswith("HERALD_LEAKAGE_EVENT"):
                 # there is 1 operator followed by arguments
-                width_leakage += len(line.split()) - 1
+                width_leakage += len(stripped_line.split()) - 1
     duck_size = 2 * (
         len(DataString.empty)  # used twice
         + get_binary_data_size(width_det, shots, data_format)
@@ -134,13 +134,13 @@ def get_simulation_response_size_estimate(
     else:
         width_mmt, width_leak = 0, 0
         for line in circuit.splitlines(False):
-            line = line.strip()
+            stripped_line = line.strip()
             # add all measurements and leakages
-            if line.startswith("M"):
-                width_mmt += len(line.split()) - 1
-            elif line.startswith("HERALD_LEAKAGE_EVENT"):
+            if stripped_line.startswith("M"):
+                width_mmt += len(stripped_line.split()) - 1
+            elif stripped_line.startswith("HERALD_LEAKAGE_EVENT"):
                 # there is 1 operator followed by arguments
-                width_leak += len(line.split()) - 1
+                width_leak += len(stripped_line.split()) - 1
     duck_size = 2 * (
         len(DataString.empty)
         + get_binary_data_size(width_mmt, shots, data_format)

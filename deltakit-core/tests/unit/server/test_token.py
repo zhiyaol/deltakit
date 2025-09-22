@@ -10,7 +10,7 @@ from deltakit_core.api.client import _auth
 from deltakit_core.api.client._client import Client
 from deltakit_core.api.client._gql_client import GQLClient
 from deltakit_core.api import paths as utils
-from deltakit_core.types._exceptions import ServerException
+from deltakit_core.types._exceptions import ServerError
 
 
 class TestGQLClientTokenManipulations:
@@ -24,7 +24,7 @@ class TestGQLClientTokenManipulations:
             return_value=client,
         )
         os.environ[deltakit_core.api.constants.DELTAKIT_SERVER_URL_ENV] = "http://localhorse:81/"
-        with pytest.raises(ServerException, match="^Could not validate token"):
+        with pytest.raises(ServerError, match="^Could not validate token"):
             Client.set_token("abc", validate=True)
         if old_server:
             os.environ[deltakit_core.api.constants.DELTAKIT_SERVER_URL_ENV] = old_server
@@ -32,7 +32,7 @@ class TestGQLClientTokenManipulations:
     def test_set_token_raises_on_server_v1_error(self):
         old_server = os.environ.pop(deltakit_core.api.constants.DELTAKIT_SERVER_URL_ENV, default="")
         os.environ[deltakit_core.api.constants.DELTAKIT_SERVER_URL_ENV] = "https://riverlane.com/"
-        with pytest.raises(ServerException, match="^Token failed validation: Status 403"):
+        with pytest.raises(ServerError, match="^Token failed validation: Status 403"):
             GQLClient("https://riverlane.com/").set_token("abc", validate=True)
         if old_server:
             os.environ[deltakit_core.api.constants.DELTAKIT_SERVER_URL_ENV] = old_server
@@ -85,5 +85,5 @@ class TestGQLClientTokenManipulations:
         Path.unlink(utils.get_config_file_path())
         randint = random.randint(1000, 9999)  # nosec B311
         token = f"abc-{randint}"
-        with pytest.raises(ServerException):
+        with pytest.raises(ServerError):
             Client.set_token(token, validate=True)

@@ -31,8 +31,8 @@ class TestDataString:
     @pytest.mark.parametrize(
             "input_bytes",
             [
-                [b"\xc0"],
-                ["ö".encode()],
+                b"\xc0",
+                "ö".encode(),
             ]
     )
     def test_to_string_fails(self, input_bytes):

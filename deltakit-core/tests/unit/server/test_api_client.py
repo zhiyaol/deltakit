@@ -34,8 +34,9 @@ def mock_client(request, mocker):
 
 class NewNoiseModel(NoiseModel):
     """User-defined noise model"""
-    ENDPOINT: ClassVar = None
-    ENDPOINT_RESULT_FIELDNAME: ClassVar = None
+    # Wrong typing needed for tests
+    ENDPOINT: ClassVar = None # type: ignore
+    ENDPOINT_RESULT_FIELDNAME: ClassVar = None # type: ignore
 
 
 class TestClient:

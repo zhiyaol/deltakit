@@ -241,6 +241,37 @@ Description of ``deltakit.core`` namespace here.
 .. autosummary::
     :toctree: _build/generated/
 
+.. _api-deltakit-core-api:
+
+``deltakit.core.api``
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. currentmodule:: deltakit.core.api
+
+Description of ``deltakit.core.api`` namespace here.
+
+.. autosummary::
+    :toctree: _build/generated/
+
+    Client
+
+.. _api-deltakit-core-api-enums:
+
+``deltakit.core.api.enums``
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. currentmodule:: deltakit.core.api.enums
+
+Description of ``deltakit.core.api.enums`` namespace here.
+
+.. autosummary::
+    :toctree: _build/generated/
+
+    DataFormat
+    DecoderType
+    QECECodeType
+    QECExperimentType
+
 .. _api-deltakit-core-data_formats:
 
 ``deltakit.core.data_formats``
@@ -263,6 +294,13 @@ Description of ``deltakit.core.data_formats`` namespace here.
     split_input_data_to_c64
     syndromes_to_b8_file
     to_bytearray
+    read_01
+    read_b8
+    read_csv
+    write_01
+    write_b8
+    write_csv
+    write_binary_data_to_file
 
 .. _api-deltakit-core-decoding_graphs:
 
@@ -321,6 +359,41 @@ Description of ``deltakit.core.decoding_graphs`` namespace here.
     unweight_graph
     vector_weights
     worst_case_num_detectors
+
+
+.. _api-deltakit-core-types:
+
+``deltakit.core.types``
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Description of ``deltakit.core.types`` namespace here.
+
+.. currentmodule:: deltakit.core.types
+
+.. autosummary::
+    :toctree: _build/generated/
+
+    DataString
+    QECExperiment
+    QECExperimentDefinition
+    BinaryDataType
+    CircuitParameters
+    Decoder
+    DecodingResult
+    DetectionEvents
+    LeakageFlags
+    MatrixSpecifications
+    Measurements
+    NoiseModel
+    ObservableFlips
+    PhysicalNoiseModel
+    QubitCoordinateToDetectorMapping
+    RAMData
+    SI1000NoiseModel
+    Sizes
+    TypedData
+    TypedDataFile
+    TypedDataString
 
 .. _api-deltakit-decode:
 
@@ -425,12 +498,6 @@ Description of ``deltakit.decode.noise_sources`` namespace here.
 
 Description of ``deltakit.explorer`` namespace here.
 
-.. autosummary::
-    :toctree: _build/generated/
-
-    Client
-    Logging
-
 .. _api-deltakit-explorer-analysis:
 
 ``deltakit.explorer.analysis``
@@ -485,38 +552,6 @@ Description of ``deltakit.explorer.codes`` namespace here.
     codes.UnrotatedToricCode
     codes.RepetitionCode
 
-.. _api-deltakit-explorer-data:
-
-``deltakit.explorer.data``
-^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-Description of ``deltakit.explorer.data`` namespace here.
-
-.. autosummary::
-    :toctree: _build/generated/
-
-    data.read_01
-    data.read_b8
-    data.read_csv
-    data.write_01
-    data.write_b8
-    data.write_binary_data_to_file
-
-.. _api-deltakit-explorer-enums:
-
-``deltakit.explorer.enums``
-^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-Description of ``deltakit.explorer.enums`` namespace here.
-
-.. autosummary::
-    :toctree: _build/generated/
-
-    enums.DataFormat
-    enums.DecoderType
-    enums.QECECodeType
-    enums.QECExperimentType
-
 .. _api-deltakit-explorer-qpu:
 
 ``deltakit.explorer.qpu``
@@ -549,35 +584,3 @@ Description of ``deltakit.explorer.simulation`` namespace here.
     :toctree: _build/generated/
 
     simulation.simulate_with_stim
-
-.. _api-deltakit-explorer-types:
-
-``deltakit.explorer.types``
-^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-Description of ``deltakit.explorer.types`` namespace here.
-
-.. autosummary::
-    :toctree: _build/generated/
-
-    types.DataString
-    types.QECExperiment
-    types.QECExperimentDefinition
-    types.BinaryDataType
-    types.CircuitParameters
-    types.Decoder
-    types.DecodingResult
-    types.DetectionEvents
-    types.LeakageFlags
-    types.MatrixSpecifications
-    types.Measurements
-    types.NoiseModel
-    types.ObservableFlips
-    types.PhysicalNoiseModel
-    types.QubitCoordinateToDetectorMapping
-    types.RAMData
-    types.SI1000NoiseModel
-    types.Sizes
-    types.TypedData
-    types.TypedDataFile
-    types.TypedDataString

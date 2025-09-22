@@ -37,7 +37,7 @@ class TestDataString:
     )
     def test_to_string_fails(self, input_bytes):
         dstring = DataString(input_bytes)
-        with pytest.raises(Exception):
+        with pytest.raises(UnicodeDecodeError):
             dstring.to_string()
 
     def test_from_datastring(self):

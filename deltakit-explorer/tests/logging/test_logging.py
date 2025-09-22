@@ -7,7 +7,7 @@ from tempfile import NamedTemporaryFile
 
 import pytest
 from deltakit_explorer import Client
-from deltakit_explorer._api import _auth
+from deltakit_core.api.client import _auth
 from deltakit_core.api._logging import LOG_FILENAME, Logging
 from deltakit_core.api.paths import get_log_directory
 from deltakit_core.types import QECExperimentDefinition

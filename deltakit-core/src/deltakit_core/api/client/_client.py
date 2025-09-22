@@ -11,11 +11,10 @@ import deltakit_core.api.constants
 import numpy as np
 import numpy.typing as npt
 import stim
-from deltakit_explorer import simulation
-from deltakit_explorer._api._api_client import APIClient
-from deltakit_explorer._api._api_v2_client import APIv2Client
-from deltakit_explorer._api._auth import TOKEN_VARIABLE
-from deltakit_explorer._api._gql_client import GQLClient
+from deltakit_core.api.client._api_client import APIClient
+from deltakit_core.api.client._api_v2_client import APIv2Client
+from deltakit_core.api.client._auth import TOKEN_VARIABLE
+from deltakit_core.api.client._gql_client import GQLClient
 from deltakit_core.api import environment as utils
 from deltakit_core.api._decorators import (
     validate_and_split_decoding, validate_and_split_simulation,
@@ -607,7 +606,7 @@ class Client:
         shots: int,
     ) -> tuple[Measurements, LeakageFlags | None]:
         """
-        Simulate STIM circuit with Deltakit client.
+        Simulate STIM circuit containing leakage with Deltakit client.
 
         Args:
             stim_circuit (str | stim.Circuit):
@@ -618,6 +617,9 @@ class Client:
         Returns:
             Tuple[Measurements, Optional[LeakageFlags]]:
                 (Measurements, Leakage). Leakage may be None.
+
+        Raises:
+            ValueError: if the provided ``stim_circuit`` does not contain leakage.
 
         Examples:
             Generate and simulate a circuit with leakage::
@@ -645,7 +647,10 @@ class Client:
         try:
             # always simulate pure stim with no leakage locally
             if not has_leakage(str(stim_circuit)):
-                return simulation.simulate_with_stim(stim_circuit, shots)
+                raise ValueError(
+                    "Client.simulate_stim_circuit should only be used for circuits "
+                    "containing leakage. Got a circuit without leakage."
+                )
             return self._api.simulate_circuit(stim_circuit, shots, query_id)
         except Exception as ex:
             Logging.error(ex, query_id)

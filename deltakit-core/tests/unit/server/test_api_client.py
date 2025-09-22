@@ -9,8 +9,7 @@ from deltakit_core.api.constants import DELTAKIT_SERVER_URL_ENV
 import numpy as np
 import pytest
 import requests
-from deltakit_circuit.gates import PauliBasis
-from deltakit_explorer import Client
+from deltakit_core.api.client._client import Client
 from deltakit_core.api.constants import (DELTAKIT_SERVER_DEFAULT_URL_ENV)
 from deltakit_core.api.enums import (DataFormat, DecoderType, QECECodeType,
                                      QECExperimentType)
@@ -148,7 +147,7 @@ class TestClient:
             mock_client, "add_noise", return_value="X 0 1\n~~~",
         )
         mock_gql = mocker.patch(
-            "deltakit_explorer._api._gql_client.gql", return_value="test2"
+            "deltakit_core.api.client._gql_client.gql", return_value="test2"
         )
         mock_client_execute = mocker.patch(
             "gql.client.SyncClientSession.execute",
@@ -503,7 +502,7 @@ class TestClient:
         text = client.generate_circuit(QECExperimentDefinition(
             experiment_type=QECExperimentType.QUANTUM_MEMORY,
             code_type=QECECodeType.BIVARIATE_BICYCLE,
-            observable_basis=PauliBasis.Z,
+            observable_basis="Z",
             num_rounds=123,
             parameters=CircuitParameters.from_matrix_specification(
                 21, 18, [3, 1, 2], [3, 1, 2]
@@ -523,7 +522,7 @@ class TestClient:
         text = client.generate_circuit(QECExperimentDefinition(
             experiment_type=QECExperimentType.QUANTUM_MEMORY,
             code_type=QECECodeType.UNROTATED_PLANAR,
-            observable_basis=PauliBasis.Z,
+            observable_basis="Z",
             num_rounds=123,
             parameters=CircuitParameters.from_sizes([31, 31]),
             basis_gates=["CX", "H"],

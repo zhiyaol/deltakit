@@ -16,8 +16,8 @@ import requests
 import requests.adapters
 if TYPE_CHECKING:
     import stim
-from deltakit_explorer._api._api_client import APIClient
-from deltakit_explorer._api._auth import (get_token,
+from deltakit_core.api.client._api_client import APIClient
+from deltakit_core.api.client._auth import (get_token,
                                           https_verification_disabled,
                                           set_token)
 from deltakit_core.api._logging import Logging

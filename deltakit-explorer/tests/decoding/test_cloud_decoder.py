@@ -1,11 +1,12 @@
 import os
 
 import deltakit_circuit
+from deltakit_core.api.client._auth import TOKEN_VARIABLE
 from deltakit_core.types._types import DecodingResult
 import numpy as np
 import pytest
 import stim
-from deltakit_explorer import Client, _api
+from deltakit_core.api.client import Client
 from deltakit_explorer._cloud_decoders import (ACDecoder,
                                                BeliefMatchingDecoder,
                                                BPOSDecoder, CCDecoder,
@@ -19,10 +20,10 @@ class TestCloudDecoder:
         # make sure we have a token specified. If there is not
         # token in the environment, client instance cannot be constructed.
         # This is by design.
-        os.environ[_api._auth.TOKEN_VARIABLE] = "fake token"
+        os.environ[TOKEN_VARIABLE] = "fake token"
 
     def teardown_method(self, method):
-        os.environ.pop(_api._auth.TOKEN_VARIABLE)
+        os.environ.pop(TOKEN_VARIABLE)
 
     @pytest.mark.parametrize(
         "decoder_class",

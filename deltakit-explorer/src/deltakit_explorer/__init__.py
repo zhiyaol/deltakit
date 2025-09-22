@@ -2,7 +2,7 @@
 import importlib.metadata
 
 from deltakit_explorer import analysis, visualisation
-from deltakit_explorer._api._client import Client
+from deltakit_core.api.client._client import Client
 from deltakit_core.api._logging import Logging
 
 __version__ = importlib.metadata.version(__package__)

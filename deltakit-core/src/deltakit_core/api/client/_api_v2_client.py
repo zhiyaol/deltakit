@@ -13,18 +13,19 @@ import requests
 import requests.adapters
 if TYPE_CHECKING:
     import stim
-from deltakit_explorer._api._api_client import APIClient, APIEndpoints
-from deltakit_explorer._api._auth import (get_token,
+from deltakit_core.api.client._api_client import APIClient
+from deltakit_core.api.enums import APIEndpoints
+from deltakit_core.api.client._auth import (get_token,
                                           set_token)
 from deltakit_core.api._logging import Logging
 from deltakit_core.api.enums import DataFormat
 from deltakit_core.types._exceptions import ServerException
 from deltakit_core.types._experiment_types import QECExperimentDefinition
 from deltakit_core.types._types import (BinaryDataType, DataString,
-                                            Decoder, DecodingResult, DetectionEvents,
-                                            LeakageFlags, Measurements,
-                                            NoiseModel, ObservableFlips,
-                                            QubitCoordinateToDetectorMapping)
+                                        Decoder, DecodingResult, DetectionEvents,
+                                        LeakageFlags, Measurements,
+                                        NoiseModel, ObservableFlips,
+                                        QubitCoordinateToDetectorMapping)
 
 
 class JobStatus(Enum):

@@ -6,7 +6,7 @@ from pathlib import Path
 import pytest
 import stim
 from deltakit_explorer import simulation
-from deltakit_explorer._api._client import Client
+from deltakit_core.api.client._client import Client
 from deltakit_core.types import Measurements, LeakageFlags
 
 
@@ -71,10 +71,6 @@ class TestStimSimulation:
                     "MZ 1\nLEAKAGE(0.0) 1",
                     (Measurements([[0], [0]]), LeakageFlags([[0], [0]]))
                 ),  # with leakage
-                (
-                    "MZ(0.0) 1",
-                    (Measurements([[0], [0]]), None)
-                )  # only measurement
             ]
     )
     def test_simulate_on_server(self, circuit, result, mocker):
@@ -93,5 +89,5 @@ class TestStimSimulation:
         client = Client("http://localhost")
         with pytest.raises(NotImplementedError):
             simulation.simulate_with_stim(
-                stim_circuit="123", shots=2, result_file="somefile", client=client,
+                stim_circuit="LEAKAGE(0.001) 0 1", shots=2, result_file="somefile", client=client,
             )

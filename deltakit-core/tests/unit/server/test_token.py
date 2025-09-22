@@ -6,9 +6,9 @@ import pytest
 import random
 from pathlib import Path
 from tests.helpers.utils import FakeResponse
-from deltakit_explorer._api import _auth
-from deltakit_explorer._api._client import Client
-from deltakit_explorer._api._gql_client import GQLClient
+from deltakit_core.api.client import _auth
+from deltakit_core.api.client._client import Client
+from deltakit_core.api.client._gql_client import GQLClient
 from deltakit_core.api import paths as utils
 from deltakit_core.types._exceptions import ServerException
 
@@ -20,7 +20,7 @@ class TestGQLClientTokenManipulations:
         old_server = os.environ.pop(deltakit_core.api.constants.DELTAKIT_SERVER_URL_ENV, default="")
         client = Client("http://localhorse:81/", api_version=api_version)
         mocker.patch(
-            "deltakit_explorer._api._client.Client.get_instance",
+            "deltakit_core.api.client.Client.get_instance",
             return_value=client,
         )
         os.environ[deltakit_core.api.constants.DELTAKIT_SERVER_URL_ENV] = "http://localhorse:81/"
@@ -41,7 +41,7 @@ class TestGQLClientTokenManipulations:
     def test_set_token_works(self, api_version, mocker):
         client = Client("http://localhorse:81/", api_version=api_version)
         mocker.patch(
-            "deltakit_explorer._api._client.Client.get_instance",
+            "deltakit_core.api.client.Client.get_instance",
             return_value=client,
         )
         randint = random.randint(1000, 9999)  # nosec B311
@@ -53,7 +53,7 @@ class TestGQLClientTokenManipulations:
     def test_set_token_works_with_no_token_before(self, api_version, mocker):
         client = Client("http://localhorse:81/", api_version=api_version)
         mocker.patch(
-            "deltakit_explorer._api._client.Client.get_instance",
+            "deltakit_core.api.client.Client.get_instance",
             return_value=client,
         )
         Path.unlink(utils.get_config_file_path())
@@ -65,7 +65,7 @@ class TestGQLClientTokenManipulations:
     def test_set_token_works_with_404_on_v2(self, mocker):
         client = Client("https://localhost/", api_version=2)
         mocker.patch(
-            "deltakit_explorer._api._client.Client.get_instance",
+            "deltakit_core.api.client.Client.get_instance",
             return_value=client,
         )
         mocker.patch.object(client._api._request_session, "get", return_value=FakeResponse(404))
@@ -78,7 +78,7 @@ class TestGQLClientTokenManipulations:
     def test_set_token_v2_fails_on_403(self, mocker):
         client = Client("https://localhost/", api_version=2)
         mocker.patch(
-            "deltakit_explorer._api._client.Client.get_instance",
+            "deltakit_core.api.client.Client.get_instance",
             return_value=client,
         )
         mocker.patch.object(client._api._request_session, "get", return_value=FakeResponse(403))

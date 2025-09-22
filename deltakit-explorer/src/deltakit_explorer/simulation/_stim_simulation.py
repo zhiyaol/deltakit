@@ -7,6 +7,7 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Optional
 
+from deltakit_core.data_formats._data_analysis import has_leakage
 import deltakit_explorer
 import numpy as np
 import stim
@@ -67,11 +68,13 @@ def simulate_with_stim(
         msg = "Please specify a non-negative number of shots."
         raise ValueError(msg)
 
-    if client is not None:
-        circuit = str(stim_circuit.as_stim_circuit()) if not isinstance(stim_circuit, str) else stim_circuit
+    # Note: at the moment, leakage can only be present in circuits represented as str
+    # instances because stim.Circuit cannot represent it. Hence the isinstance call
+    # below.
+    if client is not None and isinstance(stim_circuit, str) and has_leakage(stim_circuit):
         if result_file is not None:
             raise NotImplementedError("Use of `client` is currently incompatible with `result_file`.")
-        measurements, leakage_flags = client.simulate_stim_circuit(circuit, shots=shots)
+        measurements, leakage_flags = client.simulate_stim_circuit(stim_circuit, shots=shots)
         return measurements, leakage_flags
 
     circuit = stim.Circuit(stim_circuit) if isinstance(stim_circuit, str) else stim_circuit

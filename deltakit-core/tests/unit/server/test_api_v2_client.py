@@ -2,8 +2,8 @@
 
 import pytest
 from tests.helpers.utils import FakeResponse
-from deltakit_explorer._api._api_client import APIEndpoints
-from deltakit_explorer._api._api_v2_client import APIv2Client, Job, JobStatus
+from deltakit_core.api.enums import APIEndpoints
+from deltakit_core.api.client._api_v2_client import APIv2Client, Job, JobStatus
 from deltakit_core.api.enums import DecoderType
 from deltakit_core.types._exceptions import ServerException
 from deltakit_core.types._experiment_types import QECExperimentDefinition

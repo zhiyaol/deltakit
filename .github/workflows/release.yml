@@ -24,6 +24,9 @@ jobs:
   build-wheel:
     name: Build distribution
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      actions: write
     strategy:
       matrix:
         project: [deltakit, deltakit-circuit, deltakit-core, deltakit-decode, deltakit-explorer]
@@ -55,6 +58,9 @@ jobs:
     name: Test imports on ${{ matrix.os }}-${{ matrix.arch }}
     needs: [build-wheel]
     runs-on: ${{ matrix.os }}
+    permissions:
+      contents: read
+      actions: read
     strategy:
       fail-fast: false
       matrix:
@@ -109,6 +115,9 @@ jobs:
     name: Test imports after sdists installs
     needs: [build-wheel]
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      actions: read
     steps:
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -144,6 +153,7 @@ jobs:
       url: https://pypi.org/p/${{ matrix.project }}
     permissions:
       id-token: write  # IMPORTANT: mandatory for trusted publishing
+      actions: read
     steps:
     - name: Download all the dists
       uses: actions/download-artifact@v4
@@ -163,6 +173,7 @@ jobs:
     permissions:
       contents: write  # IMPORTANT: mandatory for making GitHub Releases
       id-token: write  # IMPORTANT: mandatory for sigstore
+      actions: read
     steps:
     - uses: actions/checkout@v4
     - name: Download all the dists

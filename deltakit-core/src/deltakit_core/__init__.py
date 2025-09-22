@@ -6,6 +6,7 @@ import importlib.metadata
 # It looks like these were intended to be separate, public modules.
 # For now, import them as such. This can be reconsidered during API review.
 from . import decoding_graphs
+from .api import Client
 
 __version__ = importlib.metadata.version(__package__)
 
@@ -13,4 +14,4 @@ __version__ = importlib.metadata.version(__package__)
 del importlib
 
 # List only public members in `__all__`.
-__all__ = ["decoding_graphs"]
+__all__ = ["decoding_graphs", "Client"]

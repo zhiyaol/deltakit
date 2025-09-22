@@ -3,7 +3,7 @@ import importlib.metadata
 
 __version__ = importlib.metadata.version(__package__)
 
-from deltakit_explorer import Client
+from deltakit_core import Client
 
 # Prevent import of `importlib` (and any other non-public objects) from this module.
 del importlib

@@ -39,8 +39,7 @@ Quantum Memory Experiment (QMEM) is a core benchmark for both QPU hardware and d
 Logical Error Probability (LEP) value, derived from the experiment, is influenced by both
 the quality of qubits and the capability of the decoder.
 
-Deltakit allows to generate experiment circuits, compatible with different QPU architectures,
-both planar and with long range connections.
+With Deltakit, you can generate experimental circuits, compatible with QPUs with different architectures and qubit-qubit connectivity.
 
 ### 1.1. Repetition code: minimal viable experiment
 
@@ -129,14 +128,14 @@ deltakit_ions_compiled_circuit.as_stim_circuit().diagram("timeline-svg-html")
 
 ## 1.2. Planar codes
 
-Deltakit allows you to generate the following planar codes:
+You can use Deltakit to generate the following planar codes:
 - Rotated planar ({class}`RotatedPlanarCode <deltakit.explorer.codes.RotatedPlanarCode>`),
 - Unrotated planar ({class}`UnrotatedPlanarCode <deltakit.explorer.codes.UnrotatedPlanarCode>`),
 - Unrotated toric ({class}`UnrotatedToricCode <deltakit.explorer.codes.UnrotatedToricCode>`),
 - Repetition codes ({class}`RepetitionCode <deltakit.explorer.codes.RepetitionCode>`).
 
 A lot of contemporary experiments are built using the rotated planar code.
-Deltakit allows you to explore them in different native gate sets, schedules, and different patch locations.
+You can explore them in different native gate sets, schedules, and different patch locations.
 A lot of parameters are optional and have reasonable default values. In the example below you see them all explicitly.
 
 ```{code-cell} ipython3
@@ -171,7 +170,7 @@ stim_circuit.diagram("timeline-svg-html")
 Some experiments explore `ISWAP` gates as the entangling gate.
 `ISWAP` circuits are generated differently, so you have to express your desire to use these gates directly at code construction (and not when compiling).
 
-Native `ISWAP` circuit generation is accessible using Deltakit cloud API.
+Native `ISWAP` circuit generation is accessible using Deltakit Cloud API.
 
 ```{code-cell} ipython3
 import stim
@@ -279,7 +278,7 @@ ion_trap_qmem_qldpc.as_stim_circuit().diagram("timeline-3d")
 
 ## Creating your own codes
 
-In this document you have learnt how to generate Quantum Memory and Stability experiments with Repetition, Rotated Planar, and qLDPC codes in different native gate sets.
+In this document you have generated Quantum Memory and Stability experiments with Repetition, Rotated Planar, and qLDPC codes in different native gate sets.
 If you want to go beyond, you may implement your own QEC codes and experiments by inheriting from the base classes defined in Deltakit.
 
 ({class}`CSSCode <deltakit.explorer.codes.CSSCode>`) and its parent ({class}`StabiliserCode <deltakit.explorer.codes.StabiliserCode>`)

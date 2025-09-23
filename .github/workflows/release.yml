@@ -59,7 +59,6 @@ jobs:
     needs: [build-wheel]
     runs-on: ${{ matrix.os }}
     permissions:
-      contents: read
       actions: read
     strategy:
       fail-fast: false
@@ -116,7 +115,6 @@ jobs:
     needs: [build-wheel]
     runs-on: ubuntu-latest
     permissions:
-      contents: read
       actions: read
     steps:
       - name: Set up Python

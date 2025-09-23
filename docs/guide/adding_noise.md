@@ -16,10 +16,10 @@ kernelspec:
 
 ## Motivation
 
-Noise is an essential component of QEC workflows.
-The whole idea of QEC only makes sense if qubits are not perfect.
-Decoders try to make logical qubits robust against errors,
-but in order for them to do a good job we have to inform them which errors they should expect.
+The goal of Quantum Error Correction is to correct errors, which are caused by different noise mechanisms.
+A noise channel is a way to describe a probabilistic change of a quantum state.
+In order for a decoder to more accurately correct errors,
+it's important to pass a model of the noise, described using noise channels.
 
 Whether you are exploring error-correcting codes or designing a new decoder,
 it's important to have realistic data to validate them.

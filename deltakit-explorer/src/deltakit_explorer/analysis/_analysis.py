@@ -140,7 +140,6 @@ class LEPPRResults:
         estimations that might be useful to understand the contribution of each process
         to the final standard-deviation estimation.
     """
-
     leppr: float
     leppr_stddev: float
     spam_error: float
@@ -522,8 +521,10 @@ def calculate_lep_and_lep_stddev(
     return lep, lep_stddev
 
 
+
 @dataclass(frozen=True)
 class LambdaResults:
+
     """Named-tuple-like class containing computation results from
     :func:`calculate_lambda_and_lambda_stddev`.
 
@@ -615,9 +616,15 @@ def calculate_lambda_and_lambda_stddev(
             )
             lambda_, lambda_stddev = res.lambda_, res.lambda_stddev
 
-        Also recovering the value of Λ_0 for the returned ``res``::
+        Also recovering the value of Λ_0::
 
-            lambda0, lambda0_stddev = res.lambda0, res.lambda0_stddev
+            (lambda_, lambda_stddev), (lambda0, lambda0_stddev) = (
+                calculate_lambda_and_lambda_stddev(
+                    distances=[5, 7, 9],
+                    lep_per_round=[1.992e-04, 4.314e-05, 7.556e-06],
+                    lep_stddev_per_round=[1.2e-05, 9.3e-06, 3.9e-06],
+                )
+            )
 
     """
     # Make sure that the inputs are numpy arrays sorted by distance
@@ -670,20 +677,20 @@ def calculate_lambda_and_lambda_stddev(
             "information.",
         )
 
-    # Error analysis explanation.
-    # We start from Ɛ_d = 1 / [ Λ_0 * Λ**((d+1)/2) ]
-    # Applying ln:  ln(Ɛ_d) = - ln(Λ_0) - (d+1)/2 * ln(Λ)
-    #                       = - ln(Λ_0) - ln(Λ)/2 - d * ln(Λ)/2
-    # The linear fit performed above gave us slope  = -ln(Λ)/2
-    #                                        offset = -ln(Λ_0) - ln(Λ)/2
-    # So Λ_0 = exp(-offset - ln(Λ)/2)
-    # Error analysis (to compute the standard deviation of Λ_0) done with the formulas
-    # in https://en.wikipedia.org/wiki/Propagation_of_uncertainty#Example_formulae:
-    # σ(ln(Λ)/2) = σ(Λ) / (2 * Λ)
-    # σ(offset) is obtained from the covariance matrix
-    # σ(-offset - ln(Λ)/2) = sqrt(σ(offset)**2 + σ(ln(Λ) / 2)**2)
+    # Error analysis explanation.
+    # We start from Ɛ_d = 1 / [ Λ_0 * Λ**((d+1)/2) ]
+    # Applying ln:  ln(Ɛ_d) = - ln(Λ_0) - (d+1)/2 * ln(Λ)
+    #                       = - ln(Λ_0) - ln(Λ)/2 - d * ln(Λ)/2
+    # The linear fit performed above gave us slope  = -ln(Λ)/2
+    #                                        offset = -ln(Λ_0) - ln(Λ)/2
+    # So Λ_0 = exp(-offset - ln(Λ)/2)
+    # Error analysis (to compute the standard deviation of Λ_0) done with the formulas
+    # in https://en.wikipedia.org/wiki/Propagation_of_uncertainty#Example_formulae:
+    # σ(ln(Λ)/2) = σ(Λ) / (2 * Λ)
+    # σ(offset) is obtained from the covariance matrix
+    # σ(-offset - ln(Λ)/2) = sqrt(σ(offset)**2 + σ(ln(Λ) / 2)**2)
     #                      = sqrt(σ(offset)**2 + σ(Λ)**2 / (4 * Λ**2))
-    # σ(exp(-offset - ln(Λ)/2)) = exp(-offset - ln(Λ)/2) * σ(-offset - ln(Λ)/2)
+    # σ(exp(-offset - ln(Λ)/2)) = exp(-offset - ln(Λ)/2) * σ(-offset - ln(Λ)/2)
     #                           = Λ_0 * sqrt(σ(offset)**2 + σ(Λ)**2 / (4 * Λ**2))
     lambda0 = float(np.exp(-offset - np.log(lambda_value) / 2))
     offset_stddev = np.sqrt(offset_variance)

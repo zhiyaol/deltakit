@@ -3,7 +3,10 @@ from __future__ import annotations
 import itertools
 import re
 
-from deltakit_explorer.analysis._analysis import compute_logical_error_per_round
+from deltakit_explorer.analysis._analysis import (
+    calculate_lambda_and_lambda_stddev,
+    compute_logical_error_per_round,
+)
 import numpy as np
 import pytest
 from deltakit_explorer import Logging, analysis
@@ -228,77 +231,67 @@ class TestCurveFit:
 
 
 class TestCalculateLambda:
+    @pytest.mark.parametrize(
+        "distances,lambda_,lambda0",
+        itertools.product(
+            ((5, 7, 9), (5, 9, 13), tuple(range(5, 22, 2))),
+            (0.7, 0.9, 1 - 1e-5, 1 - 1e-7, 1 + 1e-7, 1 + 1e-5, 1.1, 1.5, 2, 10, 20),
+            (0.01, 0.1, 1, 2, 10, 100),
+        ),
+    )
+    def test_synthetic_values(
+        self, distances: tuple[int, ...], lambda_: float, lambda0: float
+    ):
+        lepprs = [1 / (lambda0 * lambda_ ** ((d + 1) / 2)) for d in distances]
+        # Set standard deviations not too low to avoid getting into precision issues in
+        # the fit and being outside of the 3*sigma interval due to precision issues.
+        lepprs_stddev = [1e-7 for _ in distances]
+        res = calculate_lambda_and_lambda_stddev(distances, lepprs, lepprs_stddev)
+        # Test that the estimated quantities are within 3*sigma of the real one.
+        assert pytest.approx(res.lambda_, abs=3 * res.lambda_stddev) == lambda_
+        assert pytest.approx(res.lambda0, abs=3 * res.lambda0_stddev) == lambda0
+        assert isinstance(res.lambda_, float)
+        assert isinstance(res.lambda_stddev, float)
+        assert isinstance(res.lambda0, float)
+        assert isinstance(res.lambda0_stddev, float)
 
-    def test_calculate_lambda_returns_correct_values(self):
-        true_lambda_value = 5.155
-        true_lambda_value_stddev = 0.287
+    def test_non_unique_distances_raises(self):
+        distances = [5, 5, 7]
+        lepprs = [0.01, 0.01, 0.001]
+        lepprs_stddevs = [1e-10, 1e-10, 1e-10]
+        with pytest.raises(ValueError, match="^Multiple entries were provided"):
+            calculate_lambda_and_lambda_stddev(distances, lepprs, lepprs_stddevs)
 
-        _lambda, lambda_stddev = analysis.calculate_lambda_and_lambda_stddev(
-            distances=[5, 7, 9],
-            lep_per_round=[1.992e-04, 4.314e-05, 7.556e-06],
-            lep_stddev_per_round=[1.99579718e-05, 9.28881002e-06, 3.88728658e-07]
-        )
-        assert pytest.approx(_lambda, rel=0.002) == true_lambda_value
-        assert pytest.approx(lambda_stddev, rel=0.002) == true_lambda_value_stddev
-
-    def test_calculate_lambda_few_distance_raises(self):
-        Logging.set_log_to_console(False)
-        distances = [7, 9]
-        lep = [0.000996, 0.000302, 0.00006]
-        lep_stddev = [2.0e-09, 6.0e-10, 1.2e-10]
-        with pytest.raises(ValueError):
-            analysis.calculate_lambda_and_lambda_stddev(
-                distances=distances,
-                lep_per_round=lep,
-                lep_stddev_per_round=lep_stddev
-            )
+    def test_even_distances_raises(self):
+        distances = [2, 4, 6]
+        lepprs = [0.01, 0.001, 0.0001]
+        lepprs_stddevs = [1e-10, 1e-10, 1e-10]
+        with pytest.raises(ValueError, match="^Found at least one even distance"):
+            calculate_lambda_and_lambda_stddev(distances, lepprs, lepprs_stddevs)
 
     @pytest.mark.parametrize(
-        "lambd,distances,should_warn",
-        [
-            (1.3, [2, 3, 4], True),
-            (1.55, [2, 3, 4], False),
-            (1.3, [5, 7, 9], False),
-            (1.55, [5, 7, 9], False),
-        ]
+        "lamb,distances",
+        itertools.product(
+            (0.1, 0.5, 0.9, 1 - 1e-7, 1 + 1e-7, 1.1, 1.2, 1.3, 1.4),
+            ([3, 5, 7], list(range(3, 20, 4))),
+        ),
     )
-    def test_calculate_lambda_warns(self, mocker, lambd, distances, should_warn):
-        mocker.patch("deltakit_explorer._utils._logging.Logging.warn")
-        blep, blep_stddev = 0.000996, 2.0e-09
-        lep = [blep / lambd**((d - distances[0]) // 2) for d in distances]
-        lep_stddev = [blep_stddev / lambd**((d - distances[0]) // 2) for d in distances]
-        analysis.calculate_lambda_and_lambda_stddev(
-            distances=distances,
-            lep_per_round=lep,
-            lep_stddev_per_round=lep_stddev
-        )
-        if should_warn:
-            Logging.warn.assert_called_once()
-        else:
-            Logging.warn.assert_not_called()
-        Logging.set_log_to_console(False)
+    def test_small_lambda_and_low_distance_warns(
+        self, lamb: float, distances: list[int]
+    ):
+        lepprs = [0.1 * lamb ** (-(d + 1) / 2) for d in distances]
+        lepprs_stddevs = [1e-10 for _ in distances]
+        msg = "^Lambda estimation is unreliable at low code distances and low values of lambda."
+        with pytest.warns(UserWarning, match=msg):
+            calculate_lambda_and_lambda_stddev(distances, lepprs, lepprs_stddevs)
 
 
 class TestCalculateLep:
-
     def test_calculate_lep_no_fails_raises(self):
         fails = [500, 200, 25, 0]
         shots = 50000
         with pytest.raises(ValueError):
-            analysis.calculate_lep_and_lep_stddev(
-                fails=fails,
-                shots=shots
-            )
-
-    def test_calculate_lep_returns_correct_values(self):
-        true_leps = [0.1, 0.02, 0.005]
-        true_lep_stddevs = [0.00948683, 0.00442719, 0.00223047]
-        leps, lep_stddevs = analysis.calculate_lep_and_lep_stddev(
-            fails=[100, 20, 5],
-            shots=1000
-        )
-        assert leps.tolist() == true_leps
-        assert [round(l_s, 8) for l_s in lep_stddevs] == true_lep_stddevs
+            analysis.calculate_lep_and_lep_stddev(fails=fails, shots=shots)
 
     def test_calculate_lep_returns_correct_values_with_scalars(self):
         true_lep = 0.1

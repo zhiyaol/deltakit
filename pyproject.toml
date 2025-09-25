@@ -158,6 +158,7 @@ distribtuion = "distribution"
 interm = "interm"
 ket = "ket"
 ND = "ND"  # part of NDArray
+Alise = "Alise"
 
 [tool.typos.files]
 # Paths/patterns to exclude from spell checking

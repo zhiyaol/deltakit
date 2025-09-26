@@ -27,8 +27,8 @@ jobs:
         run: |
           python tools/transform_labels.py
         env:
-          ALL_LABELS: ${{ steps.label-PR.outputs.all-labels }}
-          NEW_LABELS: ${{ steps.label-PR.outputs.new-labels }}
+          ALL_LABELS: ${{ steps.labels-to-json.outputs.all-labels }}
+          NEW_LABELS: ${{ steps.labels-to-json.outputs.new-labels }}
 
   pytest:
     needs: [labels-to-json]
@@ -40,7 +40,7 @@ jobs:
           - {label: '311', version: '3.11'}
           - {label: '312', version: '3.12'}
           - {label: '313', version: '3.13'}
-        package: ${{ fromJSON(needs.label-prs.outputs.all-labels) }}
+        package: ${{ fromJSON(needs.labels-to-json.outputs.all-labels) }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repo
@@ -60,5 +60,5 @@ jobs:
         run: pixi add python=${{ matrix.python-version.version }}
 
       - name: Run ${{ matrix.package }} tests
-        if: contains(needs.label-prs.outputs.all-labels, matrix.package)
+        if: contains(needs.labels-to-json.outputs.all-labels, matrix.package)
         run: pixi run -e ${{ matrix.package }}-tests-py${{ matrix.python-version.label }} tests

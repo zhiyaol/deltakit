@@ -2,6 +2,14 @@ from collections.abc import Sequence
 from pathlib import Path
 from typing import Mapping, Type
 
+from deltakit_explorer.analysis.budget.reporters import (
+    LambdaReciprocalDerivativeReporter,
+    LambdaReciprocalEstimationReporter,
+)
+from deltakit_explorer.codes._css._css_code_experiment_circuit import (
+    css_code_memory_circuit,
+)
+from deltakit_explorer.codes._planar_code._rotated_planar_code import RotatedPlanarCode
 import numpy
 import numpy.typing as npt
 from deltakit_circuit.gates._abstract_gates import PauliBasis
@@ -9,6 +17,7 @@ from deltakit_decode._mwpm_decoder import PyMatchingDecoder
 from deltakit_decode.analysis._matching_decoder_managers import StimDecoderManager
 from deltakit_decode.analysis._run_all_analysis_engine import RunAllAnalysisEngine
 from scipy.differentiate import derivative
+
 
 from deltakit_explorer.analysis._analysis import (
     simulate_different_round_numbers_for_lep_per_round_estimation,
@@ -20,8 +29,6 @@ from deltakit_explorer.analysis.budget.interfaces import NoiseInterface
 from deltakit_explorer.analysis.budget.post_processing import (
     compute_lambda_and_stddev_from_results,
 )
-from deltakit_explorer.codes.css._css_code_memory_circuit import css_code_memory_circuit
-from deltakit_explorer.codes.planar_code.rotated_planar_code import RotatedPlanarCode
 
 
 def vectorised_lambda_reciprocal(
@@ -33,7 +40,11 @@ def vectorised_lambda_reciprocal(
     target_rse: float = 1e-4,
     data_directory: Path | None = None,
     max_workers: int = 1,
-) -> tuple[npt.NDArray[numpy.float64], npt.NDArray[numpy.float64]]:
+) -> tuple[
+    npt.NDArray[numpy.float64],
+    npt.NDArray[numpy.float64],
+    list[LambdaReciprocalEstimationReporter],
+]:
     """Compute the value of ``1 / Λ`` in a vectorised manner.
 
     This function sole purpose is to be compatible with the interface needed by
@@ -93,15 +104,23 @@ def vectorised_lambda_reciprocal(
     )
     report = engine.run()
     # 3. Compute and return
-    lambdas, stddevs = compute_lambda_and_stddev_from_results(
-        unique_xi, num_rounds_by_distance, report
+    lambdas, stddevs, reporters = compute_lambda_and_stddev_from_results(
+        unique_xi, num_rounds_by_distance, report, return_reporters=True
     )
     # Un-uniquify
     lambdas = lambdas[:, inverse_indices].reshape(ret_shape)
     stddevs = stddevs[:, inverse_indices].reshape(ret_shape)
 
     assert lambdas.shape == ret_shape
-    return 1 / lambdas, numpy.abs(stddevs / lambdas**2)
+    reciprocal_reporters = [
+        LambdaReciprocalEstimationReporter(
+            lambda_reporter, 1 / lambd, stddev / lambd**2, x.tolist()
+        )
+        for x, lambd, stddev, lambda_reporter in zip(
+            xi.T, lambdas.flatten(), stddevs.flatten(), reporters, strict=True
+        )
+    ]
+    return 1 / lambdas, numpy.abs(stddevs / lambdas**2), reciprocal_reporters
 
 
 def compute_ideal_rounds_for_noise_model_and_distance(
@@ -128,7 +147,7 @@ def compute_ideal_rounds_for_noise_model_and_distance(
         nshots, nfails = decoder_manager.run_batch_shots(batch_size)
         lep = nfails / nshots
         stddev = lep * (1 - lep) / nshots
-        while stddev > target_stddev and nshots < max_shots:
+        while (stddev > target_stddev or nfails < min_fails) and nshots < max_shots:
             ns, nf = decoder_manager.run_batch_shots(
                 min(batch_size, max_shots - nshots)
             )
@@ -158,11 +177,15 @@ def get_lambda_reciprocal_gradient(
     num_rounds_by_distances: Mapping[int, Sequence[int]],
     absolute_maximum_xi_steps: npt.NDArray[numpy.float64] | None = None,
     max_shots: int = 1_000_000,
-    batch_size: int = 25_000,
-    target_rse: float = 1e-4,
+    batch_size: int = 10_000,
+    target_rse: float = 1e-3,
     data_directory: Path | None = None,
     max_workers: int = 1,
-) -> tuple[npt.NDArray[numpy.float64], npt.NDArray[numpy.float64]]:
+) -> tuple[
+    npt.NDArray[numpy.float64],
+    npt.NDArray[numpy.float64],
+    list[LambdaReciprocalDerivativeReporter],
+]:
     """Approximates ∇(1/Λ) at the provided ``xi``.
 
     This function approximates the gradient of 1/Λ with respect to each noise parameter
@@ -177,16 +200,18 @@ def get_lambda_reciprocal_gradient(
         (1, noise_model_type.num_noise_parameters), dtype=numpy.float64
     )
     errors = numpy.zeros_like(gradient)
+    derivative_reporters: list[LambdaReciprocalDerivativeReporter] = []
     for npi, noise_name in enumerate(noise_model_type.parameter_names):
+        all_xs: list[float] = []
+        all_reporters: list[LambdaReciprocalEstimationReporter] = []
 
         def f(x: npt.NDArray[numpy.float64]) -> npt.NDArray[numpy.float64]:
-            print("Evaluation on", x)
             input_shape = x.shape
             x = numpy.atleast_1d(x)
             xis_shape = (xi.size,) + tuple(1 for _ in x.shape)
             xis = numpy.tile(xi.reshape(xis_shape), (1, *x.shape))
             xis[npi, :] = x
-            lambda_, stddevs = vectorised_lambda_reciprocal(
+            lambda_, stddevs, reporters = vectorised_lambda_reciprocal(
                 xis,
                 noise_model_type,
                 num_rounds_by_distances,
@@ -198,8 +223,10 @@ def get_lambda_reciprocal_gradient(
             )
             lambda_ = lambda_.reshape(input_shape)
             stddevs = stddevs.reshape(input_shape)
-            print("Results:", lambda_)
-            print("Stddevs:", stddevs)
+            all_xs.extend(x.flatten().tolist())
+            all_reporters.extend(reporters)
+            for reporter in reporters:
+                print(reporter.to_string())
             return lambda_
 
         # Estimating the derivative for each noise parameter separately.
@@ -213,4 +240,9 @@ def get_lambda_reciprocal_gradient(
         )
         gradient[npi], errors[npi] = res.df, res.error
         print(f"Estimated {res.df:.5g} +/- {res.error:.3g}")
-    return gradient, errors
+        derivative_reporters.append(
+            LambdaReciprocalDerivativeReporter(
+                all_xs, all_reporters, float(res.df), float(res.error)
+            )
+        )
+    return gradient, errors, derivative_reporters

@@ -11,8 +11,10 @@ from deltakit_decode.analysis._matching_decoder_managers import StimDecoderManag
 from tqdm import tqdm
 
 from deltakit_explorer.analysis.budget.interfaces import NoiseInterface
-from deltakit_explorer.codes.css._css_code_memory_circuit import css_code_memory_circuit
-from deltakit_explorer.codes.planar_code.rotated_planar_code import RotatedPlanarCode
+from deltakit_explorer.codes._css._css_code_experiment_circuit import (
+    css_code_memory_circuit,
+)
+from deltakit_explorer.codes._planar_code._rotated_planar_code import RotatedPlanarCode
 
 
 def _generate_surface_code_memory_decoder_manager(
@@ -127,8 +129,7 @@ def generate_decoder_managers_for_lambda(
     # 2. Generate the decoder managers
     decoder_managers: list[StimDecoderManager] = []
     total_circuits = (
-        sum(len(nrounds) for nrounds in num_rounds_by_distances.values())
-        * xi.shape[0]
+        sum(len(nrounds) for nrounds in num_rounds_by_distances.values()) * xi.shape[0]
     )
     distance_and_rounds_iterator = itertools.chain.from_iterable(
         zip(itertools.repeat(d, len(rounds)), rounds, strict=True)

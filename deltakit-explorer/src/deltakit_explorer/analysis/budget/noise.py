@@ -7,10 +7,9 @@ from dataclasses import asdict
 from numbers import Number
 from typing import ClassVar, cast
 
-from deltakit_explorer.qpu.qpu import QPU
 import numpy
 import numpy.typing as npt
-from deltakit_circuit import Circuit
+from deltakit_circuit import Circuit, NoiseContext, measurement_noise_profile
 from deltakit_circuit.gates._abstract_gates import (
     OneQubitCliffordGate,
     OneQubitMeasurementGate,
@@ -22,14 +21,13 @@ from deltakit_circuit.gates._reset_gates import RESET_GATES
 from deltakit_circuit.gates._two_qubit_gates import TWO_QUBIT_GATES
 from deltakit_circuit.noise_channels._abstract_noise_channels import NoiseChannel
 from deltakit_circuit.noise_channels._depolarising_noise import Depolarise1, Depolarise2
-from deltakit_circuit.noise_factory import NoiseContext, measurement_noise_profile
 from typing_extensions import override
 
 from deltakit_explorer.analysis.budget.interfaces import NoiseInterface
-from deltakit_explorer.qpu.native_gate_set import NativeGateSetAndTimes
-from deltakit_explorer.qpu.noise.noise_parameters import (
+from deltakit_explorer.qpu import QPU, NativeGateSetAndTimes
+from deltakit_explorer.qpu._noise._noise_parameters import (
     NoiseParameters,
-    idle_noise_from_t1_t2,
+    _idle_noise_from_t1_t2,
 )
 from deltakit_explorer.types._types import PhysicalNoiseModel
 
@@ -37,7 +35,7 @@ from deltakit_explorer.types._types import PhysicalNoiseModel
 def physical_noise_model_to_noise_parameters_and_native_gate_set_and_times(
     noise_data: PhysicalNoiseModel,
 ) -> tuple[NoiseParameters, NativeGateSetAndTimes]:
-    idle_noise = idle_noise_from_t1_t2(noise_data.t_1, noise_data.t_2)
+    idle_noise = _idle_noise_from_t1_t2(noise_data.t_1, noise_data.t_2)
 
     def _gate_noise(noise_context: NoiseContext) -> list[NoiseChannel]:
         noise_ops: list[NoiseChannel] = []

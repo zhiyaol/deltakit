@@ -133,6 +133,13 @@ def compute_ideal_rounds_for_noise_model_and_distance(
     target_stddev: float = 1e-4,
     max_round_number: int = 1024,
 ) -> list[int]:
+    """Compute the ideal rounds to use to estimate the LEP per round.
+
+    This function tries to efficiently find the ideal values for the number of rounds to
+    use in order to estimate the logical error probability per round. It essentially
+    wraps :func:`simulate_different_round_numbers_for_lep_per_round_estimation`,
+    using a memory experiment with the rotated surface code.
+    """
     def generate_surface_code_memory_and_run(
         num_rounds: int,
     ) -> tuple[int, int]:

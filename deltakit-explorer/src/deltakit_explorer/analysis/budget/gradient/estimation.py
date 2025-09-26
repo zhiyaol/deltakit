@@ -48,7 +48,7 @@ def vectorised_lambda_reciprocal(
     """Compute the value of ``1 / Λ`` in a vectorised manner.
 
     This function sole purpose is to be compatible with the interface needed by
-    ``scipy.differentiate.jacobian``.
+    ``scipy.differentiate.derivative``.
 
     Arguments:
         xi (npt.NDArray[numpy.float64]): an array of shape ``(m, ...)`` where

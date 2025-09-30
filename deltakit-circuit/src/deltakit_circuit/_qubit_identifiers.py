@@ -174,7 +174,7 @@ class SweepBit:
         return f"SweepBit({self._bit_index})"
 
 
-class Coordinate(tuple):
+class Coordinate(Tuple[float, ...]):
     """Class which represents general coordinates.
 
     Parameters

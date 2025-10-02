@@ -32,7 +32,7 @@ def depolarising_as_independent(probability: float, num_qubits: int) -> float:
     """
     # Need to convert a probability of applying X, Y or Z into a probability
     # of applying X, Y, Z or I.
-    pauli_combinations = 4 ** num_qubits
+    pauli_combinations = 4**num_qubits
     mixing_probability = (pauli_combinations - 1) / pauli_combinations
     if probability > mixing_probability:
         raise ValueError(

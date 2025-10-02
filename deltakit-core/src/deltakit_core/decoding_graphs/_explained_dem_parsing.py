@@ -32,16 +32,16 @@ def depolarising_as_independent(probability: float, num_qubits: int) -> float:
     """
     # Need to convert a probability of applying X, Y or Z into a probability
     # of applying X, Y, Z or I.
-    pauli_combinations = 4. ** num_qubits
-    mixing_probability = (pauli_combinations - 1.) / pauli_combinations
+    pauli_combinations = 4 ** num_qubits
+    mixing_probability = (pauli_combinations - 1) / pauli_combinations
     if probability > mixing_probability:
         raise ValueError(
             "Depolarising probability cannot be above the mixing "
             f"probability which is {mixing_probability}"
         )
     p_with_i = probability / mixing_probability
-    exponent = 1. / 2. ** (2. * num_qubits - 1.)
-    return float((1. - ((1. - p_with_i) ** exponent)) / 2.)
+    exponent = 1 / 2 ** (2 * num_qubits - 1)
+    return float((1 - (1 - p_with_i) ** exponent) / 2)
 
 
 def noise_probability(noise_channel: stim.CircuitTargetsInsideInstruction) -> float:

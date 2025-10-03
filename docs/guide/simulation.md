@@ -17,7 +17,7 @@ kernelspec:
 ## 1. Simulation of Measurements
 
 Decoding a quantum error correction experiment requires measurement data.
-This can either be data simulated on a classical computer or data obtained from a QPU. 
+This can either be data simulated on a classical computer or data obtained from a QPU.
 If you have already run a quantum error correction experiment,
 you may have measurement results in one of the formats.
 Otherwise, you can use Deltakit and Stim to generate simulated measurement data, as described on this page.
@@ -116,7 +116,7 @@ which allows you to define leakage and relaxation events, as well as leakage her
 ```
 LEAKAGE(event_probability) [list of targets]
 RELAX(event_probability) [list of targets]
-HERALD_LEAKAGE_EVENT(error_probability) [list of targets]  
+HERALD_LEAKAGE_EVENT(error_probability) [list of targets]
 ```
 
 `HERALD_LEAKAGE_EVENT` commands typically go together with measurements.

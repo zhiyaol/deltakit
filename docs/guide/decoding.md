@@ -198,7 +198,7 @@ isolated bits of syndrome.
 
 AC also presents several advantages over decoders such as MWPM:
 
-* AC is a hypergraph decoder, and can work with codes beyond surface codes (e.g. colour codes, 
+* AC is a hypergraph decoder, and can work with codes beyond surface codes (e.g. colour codes,
   qLDPC codes). MWPM only works in the world of surface codes.
 * MWPM only has the notion of X and Z noise. If these noises correlate, such that the system has Y-noise,
   AC may be more accurate than MWPM.
@@ -213,8 +213,8 @@ The LCD contains two main components to achieve this balance between speed and a
 1. A decoding engine that allows the decoder to scale;
 2. An adaptivity engine that helps deal with leakage.
 
-Leakage is a source of noise where qubits no longer occupy the $\vert 0\rangle$ and $\vert 1\rangle$ computational basis states, and instead 
-drift into higher energy 'leaked' states, specified as $\vert 2\rangle$, $\vert 3\rangle$, $\vert 4\rangle$, etc. Leakage noise is long-living and may 
+Leakage is a source of noise where qubits no longer occupy the $\vert 0\rangle$ and $\vert 1\rangle$ computational basis states, and instead
+drift into higher energy 'leaked' states, specified as $\vert 2\rangle$, $\vert 3\rangle$, $\vert 4\rangle$, etc. Leakage noise is long-living and may
 spread to other qubits through multi-qubit gates.
 
 `parameters` is an optional dictionary, which may contain flags and values
@@ -243,7 +243,7 @@ Particular decoders may also expose parameters for tuning. These are the cases f
 
 * The `BPOSDecoder` supports two optional parameters:
 
-  * `max_bp_rounds` is an integer, and specifies the maximum number of iterations 
+  * `max_bp_rounds` is an integer, and specifies the maximum number of iterations
     of message passing that should be performed during the execution of belief propagation.
     It may terminate earlier. By default, this is 20.
 
@@ -251,15 +251,15 @@ Particular decoders may also expose parameters for tuning. These are the cases f
 
 * The `ACDecoder` supports two optional parameters:
 
-  * `bp_rounds` is an integer, and specifies how many iterations of message passing 
+  * `bp_rounds` is an integer, and specifies how many iterations of message passing
     should be performed during the execution of belief propagation. Note that `bp_rounds`
     in AC is different from `max_bp_rounds` in `BP_OSD` as early termination is not
     allowed. Typically, setting this equal to the distance of the code is sufficient. By
     default, this is 20.
 
-  * `ac_kappa_proportion` is a float, between 0.0 and 1.0, and reflects the number 
-    of error mechanisms, in addition to those used to find a first solution, that should be 
-    used to grow clusters to search for additional solutions, expressed as a proportion 
+  * `ac_kappa_proportion` is a float, between 0.0 and 1.0, and reflects the number
+    of error mechanisms, in addition to those used to find a first solution, that should be
+    used to grow clusters to search for additional solutions, expressed as a proportion
     of the total number of error mechanisms. Setting this number higher results in better
     accuracy at the cost of slower performance. Start with 0.0 and increase by 0.01 until
     the desired accuracy is reached. Reasonable values lie between 0 and 0.1, as larger values will

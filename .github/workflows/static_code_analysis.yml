@@ -37,8 +37,12 @@ jobs:
       - name: typos
         run: pixi run typos
 
-      - name: ruff
+      - name: ruff check
         run: pixi run lint
+        if: ${{ always() }}
+
+      - name: ruff format
+        run: pixi run ruff format --check
         if: ${{ always() }}
 
       - name: mypy

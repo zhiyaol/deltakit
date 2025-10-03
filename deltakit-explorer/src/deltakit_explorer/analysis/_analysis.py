@@ -12,6 +12,9 @@ import numpy.typing as npt
 from scipy.optimize import curve_fit
 from deltakit_explorer._utils._logging import Logging
 
+import matplotlib.pyplot as plt
+colors = ["#006F62", "#FF7500", "#000000"]
+
 
 def get_exp_fit(
     logical_fails_all_rounds: npt.NDArray[np.int_] | list[int],
@@ -160,6 +163,7 @@ def compute_logical_error_per_round(
     num_rounds: npt.NDArray[np.int_] | Sequence[int],
     *,
     force_include_single_round: bool = False,
+    generate_plot: bool = False,
 ) -> LEPPRResults:
     """Compute the logical error-rate per round from different logical error-rate
     computations.
@@ -202,6 +206,8 @@ def compute_logical_error_per_round(
             computation if provided in ``num_rounds``. Default to ``False`` which
             results in 1-round data being ignored due to boundary effects that affect
             the final estimation. See https://arxiv.org/pdf/2207.06431.pdf (p.21).
+        generate_plot (bool):
+            if ```True`` a plot will be generated showing the exponential curve that estimated LEPPR
 
     Returns:
         LEPPRResults: detailed results of the computation.
@@ -360,6 +366,26 @@ def compute_logical_error_per_round(
     estimated_spam_error = float((1 - np.exp(offset)) / 2)
     offset_stddev = float(np.sqrt(offset_variance))
     estimated_spam_error_stddev = (1 - 2 * estimated_spam_error) * offset_stddev / 2
+
+    if generate_plot:
+        interpolation_points = 26
+        plt.errorbar(num_rounds, logical_error_rates, yerr=pl_stddev, fmt="o", color=colors[0])
+
+        rounds_interpolated = np.linspace(
+            num_rounds[0], num_rounds[-1], interpolation_points,
+            dtype=np.float64,
+        )
+        y_interpolated = [np.exp(offset) * (1 - 2 * estimated_logical_error_per_round) ** r for r in rounds_interpolated]
+        LEP_interpolated = (1.0 - np.array(y_interpolated, dtype=np.float64)) * 0.5
+        #LEP_interpolated_err = np.array([np.exp(offset) * np.exp(slope*r) * r * slope_stddev * offset_stddev for r in rounds_interpolated])
+        plt.plot(rounds_interpolated, LEP_interpolated,label=f"Fit, ε={estimated_logical_error_per_round:.4f}" + r"$\pm$" + f"{estimated_logical_error_per_round_stddev:.4f}", color=colors[0])
+        #plt.fill_between(rounds_interpolated, LEP_interpolated - LEP_interpolated_err, LEP_interpolated + LEP_interpolated_err, color=colors[0], alpha=0.2)
+
+        plt.xlabel("Rounds")
+        plt.ylabel("Logical error probability")
+        plt.legend()
+        plt.show()
+
     return LEPPRResults(
         estimated_logical_error_per_round,
         estimated_logical_error_per_round_stddev,
@@ -650,3 +676,11 @@ def get_lambda_fit(
     )
 
     return np.exp(params[0]*np.array(distances) + params[1])
+
+# only adding this here to test the plotting functionality
+res = compute_logical_error_per_round(
+                num_failed_shots=[34, 151, 356],
+                num_shots=[500000] * 3,
+                num_rounds=[2, 4, 6],
+                generate_plot=True
+            )

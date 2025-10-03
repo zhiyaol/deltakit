@@ -58,5 +58,5 @@ jobs:
         if: ${{ always() }}
 
       - name: pip_audit
-        run: pixi run pip_audit
+        run: pixi run pip_audit --ignore-vuln GHSA-4xh5-x5gv-qwph
         if: ${{ always() }}

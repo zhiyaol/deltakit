@@ -3,7 +3,6 @@ from typing import Sequence
 from matplotlib.axes import Axes
 from matplotlib.figure import Figure
 import numpy as np
-import matplotlib.pyplot as plt
 import numpy.typing as npt
 from deltakit_core.constants import RIVERLANE_COLORS_LIST as colors
 
@@ -33,7 +32,7 @@ def plot_leppr(
             ``num_rounds``.
         num_rounds (npt.NDArray[np.int_] | Sequence[int]):
             a sequence of integers representing the number of rounds used to get the
-            corresponding results in ``num_failed_shots`` and ``num_shots``. 
+            corresponding results in ``num_failed_shots`` and ``num_shots``.
         estimated_leppr (float):
             the fitted logical error probability per round
         estimated_leppr_stddev (float):

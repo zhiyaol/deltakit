@@ -5,7 +5,7 @@ from matplotlib.figure import Figure
 import numpy as np
 import numpy.typing as npt
 from deltakit_core.constants import RIVERLANE_COLORS_LIST as colors
-from deltakit_explorer.analysis._analysis import calculate_lep_and_lep_stddev, compute_logical_error_per_round, calculate_lambda_and_lambda_stddev, get_lambda_fit
+from deltakit_explorer.analysis import calculate_lep_and_lep_stddev, compute_logical_error_per_round, calculate_lambda_and_lambda_stddev, get_lambda_fit
 
 def plot_leppr(
     num_failed_shots: npt.NDArray[np.int_] | Sequence[int],

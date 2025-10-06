@@ -1,5 +1,6 @@
 from enum import Enum
 
+
 class RiverlaneColors(Enum):
     """Riverlane colors for visualisation."""
 

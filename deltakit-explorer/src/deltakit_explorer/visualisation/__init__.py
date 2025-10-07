@@ -4,7 +4,7 @@
 from deltakit_explorer.visualisation._visualisation import (correlation_matrix,
                                                             defect_diagram,
                                                             defect_rates,
-                                                            plot_leppr,
+                                                            plot_logical_error_probability_per_round,
                                                             plot_lambda)
 
 # List only public members in `__all__`.

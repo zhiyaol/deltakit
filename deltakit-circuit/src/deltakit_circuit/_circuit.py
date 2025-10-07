@@ -424,16 +424,10 @@ class Circuit(Generic[T]):  # pylint: disable=too-many-public-methods
             if isinstance(layer, GateLayer):
                 for gate in layer.gates:
                     if isinstance(gate, OneQubitMeasurementGate):
-                        layer.replace_gates(
-                            {
-                                gate: lambda gate: type(gate)(gate.qubit)
-                            }
-                        )
+                        layer.replace_gates({gate: lambda gate: type(gate)(gate.qubit)})
                     elif isinstance(gate, MPP):
                         layer.replace_gates(
-                            {
-                                gate: lambda gate: type(gate)(gate.pauli_product)
-                            }
+                            {gate: lambda gate: type(gate)(gate.pauli_product)}
                         )
             elif isinstance(layer, Circuit) and recursive:
                 layer.remove_noise(recursive)

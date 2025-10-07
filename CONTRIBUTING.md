@@ -88,6 +88,9 @@ Depending on system settings, you may experience a `Too many open files (os erro
 error. This is [known issue](https://github.com/prefix-dev/pixi/issues/2626) that can easily be
 resolved by increasing the maximum number of open file descriptors; e.g., `ulimit -n 512`.
 ```
+```{dropdown} Conda users...
+We suggest deactivating any active `conda` environments before running `pixi install`. If the `conda``base` environment is activated by default when a terminal session starts, you can turn off automatic activation by running `conda config --set auto_activate_base false`.
+```
 
 `pixi shell` activates a development virtual environment with editable installs of Deltakit
 packages so you can make changes and interact with the modified code. This environment

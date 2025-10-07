@@ -1,4 +1,5 @@
 from enum import Enum
+from typing import Final
 
 
 class RiverlaneColors(Enum):
@@ -15,9 +16,11 @@ class RiverlaneColors(Enum):
     BLACK_70_PERC = "#777776"
 
 
-RIVERLANE_COLORS_LIST = [color.value for color in RiverlaneColors]
+RIVERLANE_COLORS_LISTFinal: Final[list[str]] = [
+    color.value for color in RiverlaneColors
+]
 
-_RIVERLANE_PLOT_COLOURS: list[str] = [
+RIVERLANE_PLOT_COLOURS: Final[list[str]] = [
     "#006F62",
     "#FF6A00",
     "#4B5BFF",
@@ -30,7 +33,7 @@ _RIVERLANE_PLOT_COLOURS: list[str] = [
     "#FFD00B",
     "#0AD2F2",
 ]
-_RIVERLANE_DARK_TEXT_COLOUR = "#0A1600"
-_RIVERLANE_WHITE_TEXT_COLOUR = "#E5F0EF"
-_RIVERLANE_LINE_COLOUR = "#003B40"
-_RIVERLANE_NEUTRAL_GREY = "#DBDBDB"
+RIVERLANE_DARK_TEXT_COLOUR = "#0A1600"
+RIVERLANE_WHITE_TEXT_COLOUR = "#E5F0EF"
+RIVERLANE_LINE_COLOUR = "#003B40"
+RIVERLANE_NEUTRAL_GREY = "#DBDBDB"

@@ -22,7 +22,7 @@ from matplotlib.figure import Figure
 from deltakit_core.constants import RIVERLANE_PLOT_COLOURS
 from deltakit_explorer.analysis import LogicalErrorRatePerRoundResults, calculate_lambda_and_lambda_stddev, get_lambda_fit
 
-def plot_leppr(
+def plot_logical_error_probability_per_round(
     leppr_data: LogicalErrorRatePerRoundResults,
     num_rounds: npt.NDArray[np.int_] | Sequence[int],
     logical_error_probability: npt.NDArray[np.float64] | Sequence[float],
@@ -69,7 +69,7 @@ def plot_leppr(
 
         # plot logical error probabilities
         lep, lep_stddev = calculate_lep_and_lep_stddev(fails=num_failed_shots, shots=num_shots)
-        fig, ax = plot_leppr(
+        fig, ax = plot_logical_error_probability_per_round(
             res,
             num_rounds=num_rounds,
             logical_error_probability=lep,
@@ -495,7 +495,7 @@ if __name__ == "__main__":
                 num_shots=num_shots,
                 num_rounds=num_rounds,
             )
-    fig, ax = plot_leppr(
+    fig, ax = plot_logical_error_probability_per_round(
         res,
         num_rounds=num_rounds,
         logical_error_probability=lep,

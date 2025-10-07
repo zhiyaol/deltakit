@@ -13,6 +13,7 @@ import numpy.typing as npt
 import seaborn as sns
 from deltakit_explorer.types._types import QubitCoordinateToDetectorMapping
 from matplotlib.ticker import FuncFormatter
+import warnings
 
 
 from matplotlib.axes import Axes
@@ -81,12 +82,50 @@ def plot_leppr(
     if fig is None and ax is None:
         fig, ax = plt.subplots()
 
-    # plot logical error probabilities
-    ax.errorbar(num_rounds, logical_error_probability, yerr=logical_error_probability_stddev, fmt="o", color=RIVERLANE_PLOT_COLOURS[0], label = "Logical error probabilities")
+    if not len(num_rounds) == len(logical_error_probability) == len(logical_error_probability_stddev):
+        raise ValueError(
+            "The lengths of 'num_rounds', 'logical_error_probability' and "
+            "'logical_error_probability_stddev' must be the same. "
+            f"Got lengths {len(num_rounds)}, {len(logical_error_probability)}, "
+            f"and {len(logical_error_probability_stddev)} respectively."
+        )
+
+    isort = np.argsort(num_rounds)
+    num_rounds = np.asarray(num_rounds)[isort]
+    logical_error_probability = np.asarray(logical_error_probability)[isort]
+    logical_error_probability_stddev = np.asarray(logical_error_probability_stddev)[isort]
+    while num_rounds[0] <= 0:
+        warnings.warn(
+            f"Found an invalid number of rounds: {num_rounds[0]}. Number of rounds "
+            "should be >= 1."
+        )
+        num_rounds = num_rounds[1:]
+        logical_error_probability = logical_error_probability[1:]
+        logical_error_probability_stddev = logical_error_probability_stddev[1:]
+
+    if np.any(logical_error_probability <= 0) or np.any(logical_error_probability >= 1):
+        raise RuntimeError(
+            "Found an invalid logical error probability. Probabilities must be between 0 and 1"
+            "Logical error probabilities: "
+            f"{logical_error_probability}."
+        )
 
     leppr, leppr_stddev = leppr_data.leppr, leppr_data.leppr_stddev
     spam, spam_stddev = leppr_data.spam_error, leppr_data.spam_error_stddev
 
+    if leppr < 0 or spam < 0 or leppr >= 0.5 or spam >= 0.5:
+        warnings.warn(
+            "LEPPR or SPAM error is not within [0, 0.5)."
+            f"LEPPR: {leppr}, SPAM error: {spam}."
+        )
+    if leppr_stddev < 0 or spam_stddev < 0:
+        raise RuntimeError(
+            "LEPPR or SPAM error standard deviation is negative. Standard deviations must be non-negative."
+            f"LEPPR stddev: {leppr_stddev}, SPAM error stddev: {spam_stddev}."
+        )
+
+    # plot logical error probabilities
+    ax.errorbar(num_rounds, logical_error_probability, yerr=logical_error_probability_stddev, fmt="o", color=RIVERLANE_PLOT_COLOURS[0], label = "Logical error probabilities")
     # plot fitted LEPPR curve
     interpolation_points = 200
     rounds_interpolated = np.linspace(
@@ -443,18 +482,19 @@ def defect_rates(
 
 if __name__ == "__main__":
     from deltakit_explorer.analysis import calculate_lep_and_lep_stddev, compute_logical_error_per_round
+
     num_failed_shots=[34, 151, 356]
     num_shots=[500000] * 3
     num_rounds=[2, 4, 6]
+
+    # plot logical error probabilities
+    lep, lep_stddev = calculate_lep_and_lep_stddev(fails=num_failed_shots, shots=num_shots)
 
     res = compute_logical_error_per_round(
                 num_failed_shots=num_failed_shots,
                 num_shots=num_shots,
                 num_rounds=num_rounds,
             )
-
-    # plot logical error probabilities
-    lep, lep_stddev = calculate_lep_and_lep_stddev(fails=num_failed_shots, shots=num_shots)
     fig, ax = plot_leppr(
         res,
         num_rounds=num_rounds,

@@ -1,5 +1,7 @@
 # Setup
 
+*Want to follow along? {nb-download}`Download this notebook.<setup.md>`*
+
 ## Installation
 
 To install the latest version of Deltakit, run:

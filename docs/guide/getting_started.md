@@ -14,7 +14,7 @@ kernelspec:
 
 # Getting Started
 
-*Want to follow along? {nb-download}`Download this notebook.<getting_started.md>`*
+*Want to follow along? {download}`Download this notebook.<getting_started.md>`*
 
 Performing a QEC experiment with Deltakit typically involves four steps.
 

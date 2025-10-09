@@ -14,7 +14,7 @@ kernelspec:
 
 # QEC Experiment Circuit Generation
 
-*Want to follow along? {nb-download}`Download this notebook.<circuit_generation.md`*
+*Want to follow along? {download}`Download this notebook.<circuit_generation.md>`*
 
 Compilation of error-corrected quantum programs is a crucial task.
 With advances in codes, decoders, and control systems, we know more and more about

@@ -14,7 +14,7 @@ kernelspec:
 
 # Simulation
 
-*Want to follow along? {nb-download}`Download this notebook.<simulation.md>`*
+*Want to follow along? {download}`Download this notebook.<simulation.md>`*
 
 ## 1. Simulation of Measurements
 
